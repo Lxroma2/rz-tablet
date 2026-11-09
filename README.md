@@ -9,7 +9,7 @@ Tout tourne en local : aucune librairie chargée en ligne, aucune API externe.
 
 ![Écran d'accueil](docs/accueil.png)
 
-`ESX Legacy` · `ox_inventory` · `oxmysql` · `OneSync` · `Lua 5.4` · `HTML / CSS / JS sans framework`
+`ESX Legacy` · `ox_inventory` · `oxmysql` · `OneSync` · `Lua 5.4` · `HTML / CSS / JS sans framework` · `Licence MIT`
 
 </div>
 
@@ -409,6 +409,7 @@ rz-tablet/
 ├── fxmanifest.lua
 ├── config.lua                 configuration (voir plus haut)
 ├── README.md
+├── LICENSE                    licence MIT
 │
 ├── client/
 │   ├── main.lua               ouverture, fermeture, animation, marche, touche F3
@@ -558,4 +559,8 @@ La luminosité se règle dans le centre de contrôle ou *Réglages > Affichage*.
 - Images de comparaison dans `dev/icones/` : [Microsoft Fluent Emoji](https://github.com/microsoft/fluentui-emoji), licence MIT.
 - Design inspiré d'iPadOS. Aucune ressource d'Apple n'est utilisée.
 
-Projet privé. Tous droits réservés.
+### Licence
+
+Le code de rz-tablet est sous licence [MIT](LICENSE) : libre de l'utiliser, le modifier et le partager, en gardant la mention de copyright.
+
+Les ressources tierces listées ci-dessus gardent leur propre licence. L'atlas de la carte et tout ce qui vient de GTA V restent la propriété de leurs auteurs et de Rockstar Games.
