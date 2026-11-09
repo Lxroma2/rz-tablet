@@ -1,0 +1,147 @@
+/* ===================================================================
+   Widgets de l'accueil
+   Colonne de gauche en grille : petits widgets 142 x 142 (2 par ligne), larges sur 2 cases.
+   Mode edition : ils tremblent, "-" pour retirer, "+" pour la galerie, on les deplace en glissant.
+   =================================================================== */
+.home-widgets {
+  width: 316px; display: grid; grid-template-columns: 142px 142px; grid-auto-rows: max-content; grid-auto-flow: row dense; gap: 16px; align-content: start;
+  align-self: stretch; overflow-y: auto; overflow-x: hidden; margin: -8px -8px 0; padding: 14px 8px 16px; scrollbar-width: none;
+}
+.home-widgets::-webkit-scrollbar { display: none; }
+.home-widgets > [data-w] { position: relative; }
+.home-widgets > .wide { grid-column: span 2; }
+.wg-off { display: none !important; }
+
+button.wg { border: none; font: inherit; color: var(--text); text-align: left; cursor: pointer; display: flex; flex-direction: column; padding: 14px 15px 13px; }
+button.wg:active { transform: scale(.97); }
+button.wg { transition: transform 160ms var(--ease-out); }
+.wg-msg { margin-top: auto; font-size: 13px; line-height: 1.3; color: rgba(255, 255, 255, .7); }
+
+/* en-tete commun (Banque, Notes) */
+.wb-top, .wn-top { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: rgba(255, 255, 255, .72); }
+.wb-top svg.i, .wn-top svg.i { width: 15px; height: 15px; flex: none; }
+.wb-top svg.i { color: #34d399; }
+.wn-top svg.i { color: #ffd60a; }
+.wn-top span { flex: 1; }
+.wn-top b { font-size: 12px; color: rgba(255, 255, 255, .55); font-variant-numeric: tabular-nums; }
+
+/* Meteo : le fond suit le ciel */
+.wg-weather { color: #fff; }
+.wg-weather[data-sky=day] { background: linear-gradient(180deg, #2f7cf6, #69b2ff); }
+.wg-weather[data-sky=night] { background: linear-gradient(180deg, #0a1433, #2a3270); }
+.wg-weather[data-sky=cloud] { background: linear-gradient(180deg, #4f5f78, #8796ad); }
+.wg-weather[data-sky=rain] { background: linear-gradient(180deg, #313d4d, #5b6b7f); }
+.wg-weather[data-sky=storm] { background: linear-gradient(180deg, #1f1b33, #463d5e); }
+.wg-weather[data-sky=snow] { background: linear-gradient(180deg, #6f86a3, #b8c7da); }
+.ww-top { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; font-size: 13px; font-weight: 600; }
+.ww-top b { font-size: 13px; font-variant-numeric: tabular-nums; opacity: .9; }
+.ww-ic { width: 38px; height: 38px; margin-top: auto; fill: none; stroke: #fff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .18)); }
+.ww-label { margin-top: 6px; font-size: 15px; font-weight: 600; line-height: 1.15; }
+.ww-sub { font-size: 12px; opacity: .72; }
+
+/* Banque */
+.wb-lbl { margin-top: auto; font-size: 12px; color: rgba(255, 255, 255, .6); }
+.wb-bal { font-size: 24px; font-weight: 600; line-height: 1.15; letter-spacing: -.02em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.wb-bal.long { font-size: 19px; }
+.wb-week { display: flex; flex-wrap: wrap; gap: 0 8px; margin-top: 3px; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.wb-week .in { color: #30d158; }
+.wb-week .out { color: #ff6961; }
+.wb-sub { font-size: 11px; color: rgba(255, 255, 255, .5); }
+
+/* Notes */
+.wn-title { margin-top: 10px; font-size: 15px; font-weight: 600; line-height: 1.2; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.wn-body { margin-top: 4px; font-size: 12.5px; line-height: 1.3; color: rgba(255, 255, 255, .68); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+
+/* Vehicules (large, meme mise en page que les entreprises) */
+button.wg.wg-vehicles { width: auto; height: auto; padding: 14px 16px 10px; border-radius: 26px; }
+.wg-vehicles .hw-head b { color: #64d2ff; }
+.wv-dot { width: 9px; height: 9px; flex: none; border-radius: 50%; background: #8e8e93; margin: 0 2px; }
+.wv-dot.live { background: #30d158; box-shadow: 0 0 0 3px rgba(48, 209, 88, .22); }
+.wv-dot.lost { background: #ff9f0a; }
+.wv-row em { margin-left: 2px; font-style: normal; font-size: 11px; font-weight: 600; letter-spacing: .04em; color: rgba(255, 255, 255, .5); }
+.wv-row span.c { max-width: 52%; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- Mode edition ---------- */
+.wg-del {
+  position: absolute; top: -7px; left: -7px; z-index: 2; width: 24px; height: 24px; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer; pointer-events: none;
+  background: rgba(58, 58, 64, .9); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .25), 0 2px 6px rgba(0, 0, 0, .35);
+  opacity: 0; transform: scale(.3); transition: transform 280ms cubic-bezier(.3, 1.22, .5, 1), opacity 160ms ease;
+}
+.wg-del::before { content: ""; width: 10px; height: 2.4px; border-radius: 2px; background: #fff; }
+#home.editing .wg-del { opacity: 1; transform: none; pointer-events: auto; }
+#home.editing .home-widgets > [data-w]:not(.dragging) { animation: wjiggle 300ms ease-in-out infinite alternate; }
+#home.editing .home-widgets > [data-w]:nth-child(2n):not(.dragging) { animation-direction: alternate-reverse; }
+@keyframes wjiggle { from { transform: rotate(-.7deg); } to { transform: rotate(.7deg); } }
+.home-widgets > .dragging { z-index: 5; cursor: grabbing; box-shadow: 0 22px 44px rgba(0, 0, 0, .45); }
+#home .home-widgets > .removing { animation: none !important; transform: scale(.82); opacity: 0; transition: transform 180ms var(--ease-out), opacity 160ms ease; }
+#home .home-widgets > .wg-in { animation: wgIn 460ms cubic-bezier(.3, 1.25, .5, 1) !important; }
+@keyframes wgIn { from { transform: scale(.8); opacity: 0; } }
+
+/* case "Ajouter un widget" en tete de colonne (mode edition seulement) */
+.home-add {
+  display: none; grid-column: span 2; height: 56px; border: 1.5px dashed rgba(255, 255, 255, .35); border-radius: 20px;
+  align-items: center; justify-content: center; gap: 8px; font: inherit; font-size: 14px; font-weight: 600; color: rgba(255, 255, 255, .85); cursor: pointer;
+  background: rgba(255, 255, 255, .06); transition: background-color 150ms ease, transform 150ms var(--ease-out);
+}
+.home-add svg.i { width: 18px; height: 18px; stroke-width: 2.2; }
+#home.editing .home-add:not(.full) { display: flex; animation: wgIn 360ms cubic-bezier(.3, 1.25, .5, 1); }
+.home-add:active { transform: scale(.97); }
+@media (hover: hover) { .home-add:hover { background: rgba(255, 255, 255, .11); } }
+
+/* pastille "Rechercher" au-dessus du dock */
+.home-search {
+  flex: none; align-self: center; margin: 0 auto 10px; height: 30px; padding: 0 14px 0 11px; border: none; border-radius: 15px;
+  display: flex; align-items: center; gap: 6px; font: inherit; font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, .92); cursor: pointer;
+  background: var(--glass-bg); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); box-shadow: var(--glass-edge), 0 6px 16px rgba(0, 0, 0, .2);
+  transition: opacity 180ms ease, transform 160ms var(--ease-out);
+}
+.home-search svg.i { width: 15px; height: 15px; stroke-width: 2; }
+.home-search:active { transform: scale(.96); }
+#home.editing .home-search { opacity: 0; pointer-events: none; }
+
+/* ---------- Galerie ---------- */
+.wgal { position: absolute; inset: 0; z-index: 42; display: flex; align-items: flex-end; justify-content: center; background: rgba(0, 0, 0, .38); opacity: 0; transition: opacity 220ms ease; }
+.wgal.open { opacity: 1; }
+.wgal-sheet {
+  width: min(560px, calc(100% - 48px)); max-height: 80%; display: flex; flex-direction: column; padding: 14px 14px 18px;
+  border-radius: 26px 26px 0 0; background: rgba(30, 30, 34, .9); -webkit-backdrop-filter: blur(30px) saturate(160%); backdrop-filter: blur(30px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 -10px 40px rgba(0, 0, 0, .4);
+  transform: translateY(48px); transition: transform 340ms cubic-bezier(.3, 1.12, .5, 1);
+}
+.wgal.open .wgal-sheet { transform: none; }
+.wgal-head { display: flex; align-items: center; justify-content: space-between; padding: 2px 6px 12px; }
+.wgal-head b { font-size: 20px; font-weight: 700; }
+.wgal-close { width: 30px; height: 30px; border: none; border-radius: 50%; display: grid; place-items: center; color: rgba(255, 255, 255, .8); background: rgba(255, 255, 255, .12); cursor: pointer; }
+.wgal-close svg.i { width: 15px; height: 15px; stroke-width: 2.2; }
+.wgal-list { min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+.wgal-item {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: none; border-radius: 16px; font: inherit; text-align: left; color: #fff; cursor: pointer;
+  background: rgba(255, 255, 255, .07); transition: background-color 150ms ease, transform 150ms var(--ease-out);
+}
+.wgal-item:active:not(:disabled) { transform: scale(.98); }
+.wgal-item:disabled { opacity: .45; cursor: default; }
+.wgal-item .grow { flex: 1; min-width: 0; }
+.wgal-item b { display: block; font-size: 15px; font-weight: 600; }
+.wgal-item small { display: block; font-size: 12.5px; color: rgba(235, 235, 245, .6); }
+.wgal-size { font-size: 12px; color: rgba(235, 235, 245, .55); white-space: nowrap; }
+.wgal-ic { width: 40px; height: 40px; flex: none; border-radius: 11px; display: grid; place-items: center; color: #fff; }
+.wgal-ic svg.i { width: 22px; height: 22px; }
+
+/* teintes partagees (galerie, recherche) */
+.t-red { background: #ff453a; } .t-gray { background: #636366; } .t-blue { background: #0a84ff; } .t-green { background: #30d158; }
+.t-yellow { background: #ffcc00; color: #3a2a00 !important; } .t-purple { background: #bf5af2; } .t-indigo { background: #5e5ce6; }
+.t-cyan { background: #32ade6; } .t-dark { background: #3a3a3c; }
+
+@media (hover: hover) {
+  .wgal-item:hover:not(:disabled) { background: rgba(255, 255, 255, .12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #home.editing .home-widgets > [data-w]:not(.dragging) { animation: none; }
+  .wgal-sheet { transition: none; transform: none; }
+}
+
+/* fenetre etroite : les widgets larges disparaissent comme le widget Entreprises */
+.screen.compact .home-widgets { width: 100%; grid-template-columns: repeat(auto-fill, 142px); }
+.screen.compact .home-widgets > .wide { display: none; }

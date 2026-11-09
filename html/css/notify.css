@@ -1,0 +1,108 @@
+/* ===================================================================
+   Ilot et notifications
+   Ilot dynamique, bannieres, centre de notifications, apercu tablette rangee.
+   =================================================================== */
+
+/* ===================================================================
+   Ilot dynamique
+   =================================================================== */
+.island {
+  position: absolute; left: 50%; top: 5px; z-index: 5; width: 120px; height: 28px; transform: translateX(-50%);
+  border-radius: 16px; background: #000; color: #fff; overflow: hidden; cursor: pointer;
+  box-shadow: 0 0 0 .5px rgba(255, 255, 255, .07);
+  transition: width 480ms cubic-bezier(.3, 1.22, .5, 1), height 480ms cubic-bezier(.3, 1.22, .5, 1), border-radius 480ms cubic-bezier(.3, 1.22, .5, 1);
+}
+.island.notif { width: 420px; height: 80px; border-radius: 32px; box-shadow: 0 14px 40px rgba(0, 0, 0, .45); }
+.island.act { width: 270px; height: 36px; border-radius: 19px; }
+.island.face { width: 66px; height: 66px; border-radius: 24px; box-shadow: 0 14px 40px rgba(0, 0, 0, .4); }
+.is-c { position: absolute; inset: 0; display: flex; align-items: center; opacity: 0; transition: opacity 120ms ease; }
+.island.notif .is-c, .island.act .is-c, .island.face .is-c { opacity: 1; transition: opacity 200ms ease 160ms; }
+.statusbar .island .nt { display: flex; width: 100%; height: 100%; padding: 0 22px 0 16px; border-radius: 0; place-items: center normal; color: #fff; cursor: pointer; }
+
+.is-act { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0 16px 0 12px; white-space: nowrap; }
+.is-ic { display: grid; place-items: center; }
+.is-glyph { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.is-txt { font-size: 13.5px; font-weight: 600; }
+.is-act.warn .is-ic { color: #ff9f0a; }
+.is-act.ok .is-ic { color: var(--ok); }
+
+.is-facebox { width: 100%; height: 100%; display: grid; place-items: center; }
+.is-face { width: 38px; height: 38px; fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.is-face .fk { display: none; }
+.is-facebox.scanning .is-face { animation: lkPulse 700ms ease-in-out infinite alternate; }
+.is-facebox.ok .is-face { stroke: var(--ok); }
+.is-facebox.ok .ft { display: none; }
+.is-facebox.ok .fk { display: inline; }
+.is-facebox.fail .is-face { stroke: var(--danger); animation: lkShake 440ms var(--ease-out); }
+
+/* ===================================================================
+   Notifications
+   =================================================================== */
+.nt {
+  display: flex; align-items: flex-start; gap: 12px; width: 100%; padding: 12px 14px; border: none; background: none;
+  font: inherit; color: #fff; text-align: left; cursor: pointer;
+}
+.nt-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.nt-top { display: flex; align-items: baseline; gap: 8px; }
+.nt-top b { flex: 1; min-width: 0; font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nt-top time { flex: none; font-size: 13px; color: rgba(255, 255, 255, .55); }
+.nt-body { font-size: 14.5px; line-height: 1.32; color: rgba(255, 255, 255, .88); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.lk-notifs .nt, .nc-list .nt {
+  border-radius: 22px; background: rgba(36, 36, 44, .46);
+  -webkit-backdrop-filter: blur(26px) saturate(170%); backdrop-filter: blur(26px) saturate(170%);
+  box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .14);
+  transition: transform 150ms var(--ease-out), background-color 150ms ease;
+}
+.lk-notifs .nt:active, .nc-list .nt:active { transform: scale(.98); }
+.lk-notifs { position: relative; width: min(460px, 88%); margin: 22px auto 0; display: flex; flex-direction: column; gap: 8px; }
+.nt-more { text-align: center; font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, .7); padding-top: 2px; }
+
+/* centre de notifications : descend de l'ilot */
+.nc {
+  position: absolute; inset: 0; z-index: 39; overflow-y: auto; padding: 54px 0 24px;
+  background: rgba(8, 8, 16, .4); -webkit-backdrop-filter: blur(34px) saturate(160%); backdrop-filter: blur(34px) saturate(160%);
+  transform: translateY(-100%); transition: transform 420ms var(--ease-drawer);
+}
+.nc.open { transform: none; }
+.nc-head { width: min(520px, 92%); margin: 0 auto 12px; display: flex; align-items: center; justify-content: space-between; }
+.nc-head h2 { font-size: 30px; font-weight: 700; letter-spacing: -.025em; }
+.nc-clear { height: 30px; padding: 0 14px; border: none; border-radius: 15px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer;
+  background: var(--glass-bg); box-shadow: var(--glass-edge); transition: transform 150ms var(--ease-out); }
+.nc-clear:active { transform: scale(.95); }
+.nc-list { width: min(520px, 92%); margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+.nc-empty { padding: 70px 0; text-align: center; font-size: 15px; color: rgba(255, 255, 255, .6); }
+
+/* tablette rangee : le haut de l'ecran verrouille depasse en bas de l'ecran pour montrer la notification.
+   Rien n'est cliquable tant qu'elle n'est pas sortie. */
+#tablet.peek, #tablet.peek * { pointer-events: none !important; }
+#tablet.peek .island { cursor: default; }
+#tablet.peek .screen {
+  left: 50% !important; top: auto !important; bottom: 0;
+  transform: translate(-50%, calc(100% - 244px)); animation: peekIn 520ms var(--ease-drawer) both;
+}
+#tablet.peek.peek-out .screen { animation: peekOut 440ms var(--ease-drawer) both; }
+@keyframes peekIn { from { transform: translate(-50%, 100%); } }
+@keyframes peekOut { from { transform: translate(-50%, calc(100% - 244px)); } to { transform: translate(-50%, 100%); } }
+#tablet.peek .view, #tablet.peek .navbar, #tablet.peek .nc, #tablet.peek .rs, #tablet.peek .status-right button { visibility: hidden; }
+#tablet.peek .statusbar { background: transparent; }
+
+/* Ne pas deranger : bouton du centre, indicateur de la barre d'etat, ilot */
+.nc-acts { display: flex; align-items: center; gap: 8px; }
+.nc-dnd {
+  height: 30px; padding: 0 12px 0 10px; border: none; border-radius: 15px; display: flex; align-items: center; gap: 6px; color: #fff;
+  font-size: 14px; font-weight: 600; cursor: pointer; background: var(--glass-bg); box-shadow: var(--glass-edge);
+  transition: transform 150ms var(--ease-out), background-color 200ms ease;
+}
+.nc-dnd svg.i { width: 16px; height: 16px; stroke-width: 2; }
+.nc-dnd.on { background: #5e5ce6; }
+.nc-dnd.on svg.i { fill: currentColor; }
+.nc-dnd:active { transform: scale(.95); }
+.sb-dnd { display: none; color: #a5a3ff; }
+.sb-dnd svg.i { width: 15px; height: 15px; fill: currentColor; stroke-width: 1.6; }
+.screen.dnd .sb-dnd { display: grid; place-items: center; }
+.is-act.dnd .is-ic { color: #a5a3ff; }
+.c-indigo { background: linear-gradient(160deg, #7d7aff, #5e5ce6); }
+
+/* Reglages > AirDrop : coche */
+.ad-opt .chk { width: 20px; height: 20px; color: var(--accent); stroke-width: 2.4; visibility: hidden; }
+.ad-opt.on .chk { visibility: visible; }

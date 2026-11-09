@@ -1,0 +1,39 @@
+/* ===================================================================
+   Preferences du systeme
+   Survol a la souris, mouvement reduit, transparence reduite.
+   =================================================================== */
+
+/* ---------- Survol : souris uniquement ---------- */
+@media (hover: hover) and (pointer: fine) {
+  .app:hover:not(.disabled) .icon { transform: translateY(-3px) scale(1.03); }
+  .navbar button:hover, .toolbar button:hover:not(:disabled), .statusbar button:hover { color: var(--text); }
+  .toolbar button:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+  .navbar button#n-home:hover .pill { background: rgba(255, 255, 255, .9); }
+  .tab:hover:not(.active) { background: rgba(255, 255, 255, .11); color: var(--text); }
+  .tab .x:hover { background: rgba(255, 255, 255, .15); opacity: 1; }
+  .bm:hover { background: rgba(255, 255, 255, .14); }
+  .chip .x:hover { opacity: 1; color: var(--danger); background: rgba(255, 255, 255, .1); }
+  .blocked button:hover:not(#blocked-close) { filter: brightness(1.12); }
+  .st-row:not(.col):hover { background-color: rgba(255, 255, 255, .04); }
+  .hw:hover { filter: brightness(1.1); }
+  .seg button:not(.on):hover, .sv-tabbar button:not(.on):hover { color: var(--text); }
+}
+
+/* ---------- Mouvement reduit : on garde les fondus, on retire les deplacements ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .screen.in { animation: fadeOnly 150ms ease; }
+  #home.active .app { animation: fadeOnly 150ms ease backwards; }
+  .app:hover:not(.disabled) .icon, .app:active:not(.disabled), .navbar button:active, .toolbar button:active, .tab:active, .bm:active { transform: none; }
+  .loading.hidden, .blocked.hidden { transform: none; }
+  @keyframes fadeOnly { from { opacity: 0; } }
+  .st-page { transform: none; opacity: 0; transition: opacity 180ms ease, visibility 0s linear 180ms; }
+  .st-page.open { opacity: 1; }
+  .st-root { opacity: 1; }
+  .st-stack.pushed .st-root { transform: none; }
+}
+
+/* ---------- Transparence reduite : verre -> surfaces pleines ---------- */
+@media (prefers-reduced-transparency: reduce) {
+  :root { --glass-bg: linear-gradient(180deg, #3a3a3e, #2c2c2e); --glass-blur: none; }
+  .st-head { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}

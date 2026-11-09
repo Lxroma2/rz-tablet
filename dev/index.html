@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>rz-tablet · banc d'essai</title>
+<style>
+  :root {
+    --bg: #0e0f12; --panel: #16171b; --panel-2: #1e2025; --line: rgba(255,255,255,.08);
+    --text: #f2f2f4; --dim: #9a9ca6; --accent: #0a84ff; --ok: #30d158; --warn: #ff9f0a;
+    --r: 10px; font-family: -apple-system, "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-size: 13px; overflow: hidden; }
+  body { display: grid; grid-template-columns: 290px 1fr; }
+
+  aside { background: var(--panel); border-right: 1px solid var(--line); overflow-y: auto; padding: 18px 16px 24px; display: flex; flex-direction: column; gap: 18px; }
+  h1 { font-size: 15px; font-weight: 650; letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
+  h1 small { font-weight: 500; color: var(--dim); font-size: 12px; }
+  .live { margin-left: auto; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px rgba(48,209,88,.18); }
+  .live.off { background: #555; box-shadow: none; }
+  section { display: flex; flex-direction: column; gap: 8px; }
+  h2 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--dim); }
+  .row { display: flex; gap: 6px; }
+  .row > * { flex: 1; }
+
+  button, select, input[type=text], textarea {
+    font: inherit; color: var(--text); background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: var(--r); padding: 8px 10px; outline: none;
+  }
+  button { cursor: pointer; font-weight: 550; transition: background .12s, transform .1s; }
+  button:hover { background: #262830; }
+  button:active { transform: scale(.97); }
+  button.primary { background: var(--accent); border-color: transparent; }
+  button.primary:hover { background: #2a93ff; }
+  input[type=text]:focus, textarea:focus, select:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 54px; }
+
+  .seg { display: flex; background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r); padding: 2px; }
+  .seg button { flex: 1; border: 0; background: transparent; padding: 6px 4px; border-radius: 8px; color: var(--dim); font-weight: 550; }
+  .seg button.on { background: #3a3c44; color: var(--text); }
+  .check { display: flex; align-items: center; gap: 8px; color: var(--dim); cursor: pointer; user-select: none; }
+  .check input { accent-color: var(--accent); }
+  .hint { color: var(--dim); font-size: 11.5px; line-height: 1.45; }
+  kbd { font: 11px ui-monospace, Consolas, monospace; background: var(--panel-2); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; color: var(--text); }
+  #log { font: 11px ui-monospace, Consolas, monospace; color: var(--dim); min-height: 14px; }
+
+  main { position: relative; overflow: hidden; background: #000; }
+  #bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+  #frame { position: absolute; left: 50%; top: 50%; border: 0; transform-origin: center; background: transparent; }
+  #size { position: absolute; right: 12px; bottom: 10px; font: 11px ui-monospace, Consolas, monospace; color: rgba(255,255,255,.55); background: rgba(0,0,0,.35); padding: 3px 7px; border-radius: 6px; pointer-events: none; }
+</style>
+</head>
+<body>
+<aside>
+  <h1>rz-tablet <small>banc d'essai</small><span class="live" id="live" title="Rechargement auto"></span></h1>
+
+  <section>
+    <h2>Tablette</h2>
+    <div class="seg" id="lockmode">
+      <button data-v="none">Aucun</button><button data-v="pin">Code</button><button data-v="face">Face ID</button>
+    </div>
+    <div class="row"><button class="primary" id="b-open">Ouvrir</button><button id="b-close">Fermer</button></div>
+    <label class="check"><input type="checkbox" id="c-walk"> Marche (tablette translucide)</label>
+    <p class="hint">Code de démo : <kbd>1234</kbd>. <kbd>F3</kbd> ouvre ou ferme, comme en jeu.</p>
+  </section>
+
+  <section>
+    <h2>Résultat Face ID</h2>
+    <div class="seg" id="face">
+      <button data-v="ok">Reconnu</button><button data-v="mask">Masque</button><button data-v="fail">Inconnu</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Notification</h2>
+    <select id="n-preset">
+      <option value="client">Services : message d'un client</option>
+      <option value="company">Services : réponse d'une entreprise</option>
+      <option value="system">Système</option>
+      <option value="custom">Personnalisée</option>
+    </select>
+    <input type="text" id="n-title" placeholder="Titre">
+    <textarea id="n-body" placeholder="Texte"></textarea>
+    <label class="check"><input type="checkbox" id="c-peek" checked> Tablette rangée : aperçu en bas</label>
+    <button class="primary" id="b-notif">Envoyer</button>
+    <p class="hint">Si la tablette est ouverte, la notification sort de l'îlot. Sinon, et si l'aperçu est coché, elle dépasse en bas de l'écran.</p>
+  </section>
+
+  <section>
+    <h2>Écran du jeu</h2>
+    <select id="res">
+      <option value="1920x1080">1920 × 1080</option>
+      <option value="2560x1440">2560 × 1440</option>
+      <option value="1600x900">1600 × 900</option>
+      <option value="1366x768">1366 × 768</option>
+      <option value="1280x720">1280 × 720</option>
+    </select>
+    <select id="bg-sel">
+      <option value="night">Fond : ville de nuit</option>
+      <option value="day">Fond : ville de jour</option>
+      <option value="grid">Fond : damier</option>
+      <option value="black">Fond : noir</option>
+      <option value="file">Fond : dev/fond.jpg</option>
+    </select>
+    <p class="hint">Mets une capture du jeu dans <kbd>dev/fond.jpg</kbd> pour voir la tablette par-dessus.</p>
+  </section>
+
+  <section>
+    <h2>Données</h2>
+    <div class="row"><button id="b-reload">Recharger</button><button id="b-reset">Tout effacer</button></div>
+    <label class="check"><input type="checkbox" id="c-auto" checked> Recharger à chaque sauvegarde</label>
+    <p class="hint">« Tout effacer » vide les réglages, apps installées et notifications enregistrés par la tablette.</p>
+    <p class="hint"><a href="pictos.html" target="_blank" style="color:#0a84ff">Liste des pictogrammes</a> pour Config.AppIcons et Config.Store.</p>
+    <div id="log"></div>
+  </section>
+</aside>
+
+<main>
+  <div id="bg"></div>
+  <iframe id="frame" src="../html/index.html" allow="clipboard-read; clipboard-write"></iframe>
+  <div id="size"></div>
+</main>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const frame = $('frame'), main = document.querySelector('main');
+  const W = () => frame.contentWindow;
+
+  /* ---------- Etat du banc (separe des donnees de la tablette : prefixe rzdev_) ---------- */
+  const KEY = 'rzdev_state';
+  const st = Object.assign({ lock: 'none', face: 'ok', open: true, walk: false, res: '1920x1080', bg: 'night', auto: true, peek: true, preset: 'client' },
+    (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } })());
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+  const log = (t) => { $('log').textContent = new Date().toLocaleTimeString('fr-FR') + '  ' + t; };
+
+  /* ---------- Messages vers la tablette (comme SendNUIMessage) ---------- */
+  const STORE = [
+    { id: 'wikipedia', label: 'Wikipédia', subtitle: "L'encyclopédie libre", category: 'Référence', url: 'https://fr.wikipedia.org/', color: '#3a3a3c', glyph: 'W', icon: 'book-open-text' },
+    { id: 'dynasty8', label: 'Dynasty 8', subtitle: 'Immobilier à Los Santos', category: 'Immobilier', url: 'https://dynasty8wl.fr/', color: '#0f8a4b', glyph: 'D8', icon: 'house-line', description: 'Les biens à vendre et à louer.' },
+  ];
+  const send = (data) => { try { W().postMessage(data, '*'); } catch (e) {} };
+  // Config.Store et Config.AppIcons lus dans le vrai config.lua par serve.py (STORE en secours)
+  let luaCfg = {};
+  async function loadCfg() {
+    try {
+      luaCfg = await (await fetch('/__config', { cache: 'no-store' })).json();
+      if (luaCfg.errors) log('config.lua : ' + luaCfg.errors.join(' | '));
+    } catch (e) { luaCfg = {}; }
+  }
+  const cfgReady = location.protocol.indexOf('http') === 0 ? loadCfg() : Promise.resolve();
+  async function open() {
+    st.open = true; save();
+    await cfgReady;
+    send({ action: 'open', browser: { bookmarks: [{ title: 'Wikipedia', url: 'https://fr.wikipedia.org/' }] }, defaults: {}, lock: { mode: st.lock },
+      store: Array.isArray(luaCfg.store) ? luaCfg.store : STORE, icons: luaCfg.icons || {} });
+    if (st.walk) setTimeout(walk, 50);
+    log('ouverte (verrou : ' + st.lock + ')');
+  }
+  function close() { st.open = false; save(); send({ action: 'close' }); log('fermée'); }
+  function walk() { send({ action: 'walking', state: st.walk, opacity: 0.55 }); }
+
+  const PRESETS = {
+    client: { app: 'services', title: 'Jean Dupont · Mécano Los Santos', body: 'Ma voiture est en panne devant la banque, vous pouvez venir ? (position jointe)',
+      open: { view: 'services', tid: 2, role: 'company', serviceId: 3, service: 'Mécano Los Santos', name: 'Jean Dupont' } },
+    company: { app: 'services', title: 'Paul Martin · Mécano Los Santos', body: 'On arrive dans 5 minutes.',
+      open: { view: 'services', tid: 1, role: 'client', serviceId: 3, service: 'Mécano Los Santos', name: 'Mécano Los Santos' } },
+    system: { app: 'settings', title: 'Réglages', body: 'Ta tablette est à jour.' },
+    custom: { app: 'system', title: '', body: '' },
+  };
+  function fillPreset() {
+    const p = PRESETS[st.preset] || PRESETS.custom;
+    $('n-title').value = p.title; $('n-body').value = p.body;
+  }
+  function notify() {
+    const p = PRESETS[st.preset] || PRESETS.custom;
+    const n = Object.assign({}, p, { title: $('n-title').value.trim() || 'Notification', body: $('n-body').value.trim() });
+    if (st.open) { send({ action: 'notify', notif: n }); log('notification (tablette ouverte)'); return; }
+    send({ action: 'notify', notif: n, peek: st.peek, peekTime: 5000 });
+    log(st.peek ? 'notification (aperçu tablette rangée)' : 'notification (rangée, sans aperçu)');
+  }
+
+  /* ---------- Taille d'ecran et fond ---------- */
+  const BG = {
+    night: 'radial-gradient(120% 80% at 70% 20%, #2b3a5c 0%, #141b2e 45%, #07090f 100%), #07090f',
+    day: 'linear-gradient(180deg, #8fb8de 0%, #c9d9e6 55%, #8d8574 56%, #5d5a52 100%)',
+    grid: 'repeating-conic-gradient(#2a2a2e 0 25%, #1c1c1f 0 50%) 0 0 / 32px 32px',
+    black: '#000',
+    file: '#000 url("fond.jpg") center / cover no-repeat',
+  };
+  function layout() {
+    const [w, h] = st.res.split('x').map(Number);
+    const s = Math.min(main.clientWidth / w, main.clientHeight / h);
+    frame.style.width = w + 'px'; frame.style.height = h + 'px';
+    frame.style.transform = 'translate(-50%, -50%) scale(' + s + ')';
+    const bg = $('bg'); bg.style.width = w * s + 'px'; bg.style.height = h * s + 'px';
+    bg.style.left = (main.clientWidth - w * s) / 2 + 'px'; bg.style.top = (main.clientHeight - h * s) / 2 + 'px';
+    bg.style.background = BG[st.bg] || BG.night;
+    $('size').textContent = w + ' × ' + h + '  ·  ' + Math.round(s * 100) + ' %';
+  }
+  new ResizeObserver(layout).observe(main);
+
+  /* ---------- Controles ---------- */
+  function seg(id, key, after) {
+    const box = $(id);
+    const paint = () => box.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.v === st[key]));
+    box.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; st[key] = b.dataset.v; save(); paint(); if (after) after(); });
+    paint();
+  }
+  seg('lockmode', 'lock', () => { if (st.open) open(); });
+  seg('face', 'face', () => { try { W().RZDEV_FACE = st.face; } catch (e) {} });
+  $('b-open').onclick = open;
+  $('b-close').onclick = close;
+  $('b-notif').onclick = notify;
+  $('c-walk').checked = st.walk; $('c-walk').onchange = (e) => { st.walk = e.target.checked; save(); walk(); };
+  $('c-peek').checked = st.peek; $('c-peek').onchange = (e) => { st.peek = e.target.checked; save(); };
+  $('n-preset').value = st.preset; $('n-preset').onchange = (e) => { st.preset = e.target.value; save(); fillPreset(); };
+  $('res').value = st.res; $('res').onchange = (e) => { st.res = e.target.value; save(); layout(); };
+  $('bg-sel').value = st.bg; $('bg-sel').onchange = (e) => { st.bg = e.target.value; save(); layout(); };
+  $('c-auto').checked = st.auto; $('c-auto').onchange = (e) => { st.auto = e.target.checked; save(); $('live').classList.toggle('off', !st.auto); };
+  $('live').classList.toggle('off', !st.auto);
+  $('b-reload').onclick = () => reloadFrame('rechargée');
+  $('b-reset').onclick = () => {
+    try { Object.keys(localStorage).filter((k) => k.indexOf('rztab_') === 0).forEach((k) => localStorage.removeItem(k)); } catch (e) {}
+    reloadFrame('données effacées');
+  };
+  fillPreset();
+
+  // F3 comme RegisterKeyMapping, depuis le banc ou depuis la tablette
+  const onKey = (e) => { if (e.key === 'F3') { e.preventDefault(); st.open ? close() : open(); } };
+  window.addEventListener('keydown', onKey);
+
+  /* ---------- Chargement de la tablette : reapplique l'etat du banc ---------- */
+  let reason = 'chargée';
+  frame.addEventListener('load', () => {
+    const w = W();
+    try {
+      w.RZDEV_FACE = st.face; w.addEventListener('keydown', onKey);
+      // les appels NUI vers Lua arrivent ici ; "close" joue le role du client Lua
+      w.RZDEV_POST = (name, data) => {
+        if (name === 'close') { close(); return; }
+        if (name !== 'duiLayout' && name !== 'typing') log('NUI ' + name + ' ' + JSON.stringify(data).slice(0, 60));
+      };
+    } catch (e) {}
+    // app.js s'ouvre seul hors FiveM (verrou "aucun") : on remplace par l'etat du banc
+    if (st.open) open(); else { send({ action: 'close' }); }
+    log(reason); reason = 'chargée';
+  });
+  function reloadFrame(why) { reason = why; try { W().location.reload(); } catch (e) { frame.src = frame.src; } }
+
+  /* ---------- Rechargement auto (serve.py /__version) ---------- */
+  let last = null;
+  async function poll() {
+    try {
+      const v = await (await fetch('/__version', { cache: 'no-store' })).json();
+      if (last && st.auto) {
+        if (v.dev !== last.dev) { location.reload(); return; }
+        if (v.cfg !== last.cfg) { await loadCfg(); if (st.open) open(); log('config.lua relu'); }
+        if (v.html !== last.html) reloadFrame('rechargée (fichier modifié)');
+        else if (v.css !== last.css) {
+          try {
+            W().document.querySelectorAll('link[rel=stylesheet]').forEach((l) => {
+              const u = new URL(l.href); u.searchParams.set('t', Date.now()); l.href = u.href;
+            });
+            log('CSS remplacé à chaud');
+          } catch (e) { reloadFrame('rechargée'); }
+        }
+      }
+      last = v; $('live').title = 'Rechargement auto : connecté';
+    } catch (e) { $('live').classList.add('off'); $('live').title = 'serve.py ne répond pas'; }
+    setTimeout(poll, 700);
+  }
+  if (location.protocol.indexOf('http') === 0) poll();
+  else { $('live').classList.add('off'); log('ouvre via serve.py pour le rechargement auto'); }
+})();
+</script>
+</body>
+</html>

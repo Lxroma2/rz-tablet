@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Tablette</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/browser.css">
+<link rel="stylesheet" href="css/settings.css">
+<link rel="stylesheet" href="css/services.css">
+<link rel="stylesheet" href="css/window.css">
+<link rel="stylesheet" href="css/preferences.css">
+<link rel="stylesheet" href="css/lock.css">
+<link rel="stylesheet" href="css/notify.css">
+<link rel="stylesheet" href="css/store.css">
+<link rel="stylesheet" href="css/home-edit.css">
+<link rel="stylesheet" href="assets/leaflet/leaflet.css">
+<link rel="stylesheet" href="css/notes.css">
+<link rel="stylesheet" href="css/calc.css">
+<link rel="stylesheet" href="css/map.css">
+<link rel="stylesheet" href="css/vehicles.css">
+<link rel="stylesheet" href="css/bank.css">
+<link rel="stylesheet" href="css/airdrop.css">
+<link rel="stylesheet" href="css/cc.css">
+<link rel="stylesheet" href="css/widgets.css">
+<link rel="stylesheet" href="css/switcher.css">
+<link rel="stylesheet" href="css/search.css">
+</head>
+<body>
+
+<!-- Icones (trait uniforme 1.75) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="ic-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></symbol>
+  <symbol id="ic-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></symbol>
+  <symbol id="ic-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+  <symbol id="ic-note" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7"/></symbol>
+  <symbol id="ic-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="ic-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="ic-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="ic-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></symbol>
+  <symbol id="ic-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7"/><path d="M6 10v10h12V10"/></symbol>
+  <symbol id="ic-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8z"/></symbol>
+  <symbol id="ic-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="ic-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="ic-chevron" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="ic-chev-r" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+  <symbol id="ic-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></symbol>
+  <symbol id="ic-briefcase" viewBox="0 0 24 24"><rect x="3.5" y="7.5" width="17" height="12" rx="1.5"/><path d="M9 7.5V5.5h6v2M3.5 13h17"/></symbol>
+  <symbol id="ic-inbox" viewBox="0 0 24 24"><path d="M4 13l2-7h12l2 7v5H4z"/><path d="M4 13h5l1 2h4l1-2h5"/></symbol>
+  <symbol id="ic-send" viewBox="0 0 24 24"><path d="M21 3L3 10.5l7 3 3 7z"/><path d="M10 13.5L21 3"/></symbol>
+  <symbol id="ic-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
+  <symbol id="ic-bell" viewBox="0 0 24 24"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="ic-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6.5"/></symbol>
+  <symbol id="ic-power" viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M6.3 7.5a8 8 0 1 0 11.4 0"/></symbol>
+  <symbol id="ic-center" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol>
+  <symbol id="ic-monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></symbol>
+  <symbol id="ic-gamepad" viewBox="0 0 24 24"><path d="M6 8h12a3 3 0 0 1 3 3v3a3 3 0 0 1-5.2 2L14 14h-4l-1.8 2A3 3 0 0 1 3 14v-3a3 3 0 0 1 3-3z"/><path d="M8 10v3M6.5 11.5h3"/></symbol>
+  <symbol id="ic-tablet" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M11 18h2"/></symbol>
+  <symbol id="ic-compose" viewBox="0 0 24 24"><path d="M12 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6"/><path d="M17.5 3.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/></symbol>
+  <symbol id="ic-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol>
+  <symbol id="ic-car" viewBox="0 0 256 256"><path fill="currentColor" stroke="none" d="M184,176h40v24a8,8,0,0,1-8,8H192a8,8,0,0,1-8-8ZM32,200a8,8,0,0,0,8,8H64a8,8,0,0,0,8-8V176H32ZM194.11,44.75A8,8,0,0,0,186.8,40H69.2a8,8,0,0,0-7.31,4.75L32,112H224Z" opacity="0.2"/><path fill="currentColor" stroke="none" d="M240,104H229.2L201.42,41.5A16,16,0,0,0,186.8,32H69.2a16,16,0,0,0-14.62,9.5L26.8,104H16a8,8,0,0,0,0,16h8v80a16,16,0,0,0,16,16H64a16,16,0,0,0,16-16V184h96v16a16,16,0,0,0,16,16h24a16,16,0,0,0,16-16V120h8a8,8,0,0,0,0-16ZM69.2,48H186.8l24.89,56H44.31ZM64,200H40V184H64Zm128,0V184h24v16Zm24-32H40V120H216ZM56,144a8,8,0,0,1,8-8H80a8,8,0,0,1,0,16H64A8,8,0,0,1,56,144Zm112,0a8,8,0,0,1,8-8h16a8,8,0,0,1,0,16H176A8,8,0,0,1,168,144Z"/></symbol>
+  <symbol id="ic-share" viewBox="0 0 24 24"><path d="M12 3.5v11"/><path d="M8 7.5l4-4 4 4"/><path d="M7 10.5H6.5A1.5 1.5 0 0 0 5 12v7a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-7a1.5 1.5 0 0 0-1.5-1.5H17"/></symbol>
+  <symbol id="ic-moon" viewBox="0 0 24 24"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6z"/></symbol>
+  <symbol id="ic-airdrop" viewBox="0 0 24 24"><path d="M8.5 17.5a5 5 0 1 1 7 0"/><path d="M5.6 20.4a9 9 0 1 1 12.8 0"/><circle cx="12" cy="12.5" r="1.6"/></symbol>
+  <symbol id="ic-arrow-in" viewBox="0 0 24 24"><path d="M17 7L7 17"/><path d="M7 9v8h8"/></symbol>
+  <symbol id="ic-arrow-out" viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M9 7h8v8"/></symbol>
+  <symbol id="ic-bank" viewBox="0 0 24 24"><path d="M3 9.5L12 4l9 5.5"/><path d="M5.5 10.5v7M10 10.5v7M14 10.5v7M18.5 10.5v7"/><path d="M3 20.5h18"/></symbol>
+  <symbol id="ic-locate" viewBox="0 0 24 24"><path d="M20.5 3.5L3.5 10.5l7 2.5 2.5 7z"/></symbol>
+  <symbol id="ic-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+  <symbol id="ic-walk" viewBox="0 0 24 24"><circle cx="13.5" cy="4.5" r="1.8"/><path d="M13 8.2l-1.5 5M11.5 13.2L9 20.5M11.5 13.2l2.7 3 .8 4.3M13 8.2l2.6 3 2.4.6M13 8.2l-3 1.4-1.5 2.6"/></symbol>
+  <symbol id="ic-sound" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></symbol>
+  <symbol id="ic-sound-off" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></symbol>
+  <symbol id="ic-eye" viewBox="0 0 24 24"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="ic-calc" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 6.5h7v3h-7z"/><path d="M8.7 13.5h.01M12 13.5h.01M15.3 13.5h.01M8.7 17h.01M12 17h.01M15.3 17h.01" stroke-width="2.4"/></symbol>
+  <symbol id="ic-map" viewBox="0 0 24 24"><path d="M9 4.5L3.5 6.5v13L9 17.5l6 2 5.5-2v-13L15 6.5z"/><path d="M9 4.5v13M15 6.5v13"/></symbol>
+  <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.3"/><path d="M15.5 15.5l4.5 4.5"/></symbol>
+  <symbol id="ic-wifi" viewBox="0 0 24 24"><path d="M4 9a12 12 0 0 1 16 0M7 12.5a8 8 0 0 1 10 0M10 16a4 4 0 0 1 4 0"/><circle cx="12" cy="19" r=".6"/></symbol>
+</svg>
+
+<div id="tablet" class="hidden">
+  <div class="screen">
+    <div class="statusbar">
+      <span class="status-left"><span id="clock">00:00</span><span id="sdate"></span></span>
+      <div id="island" class="island" role="button" aria-label="Notifications"><div id="island-c" class="is-c"></div></div>
+      <span class="status-right">
+        <span id="dbg" class="dbg"></span>
+        <button id="reset-win" title="Recentrer la fenêtre" aria-label="Recentrer la fenêtre"><svg class="i"><use href="#ic-center"/></svg></button>
+        <span id="sb-dnd" class="sb-dnd" title="Ne pas déranger"><svg class="i"><use href="#ic-moon"/></svg></span>
+        <span class="wifi"><svg class="i"><use href="#ic-wifi"/></svg><svg class="i bat" viewBox="0 0 28 14"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".55"/><rect x="3" y="3.5" width="18" height="7" rx="1.5" fill="currentColor" stroke="none"/><path d="M25.5 5v4" stroke="currentColor" stroke-width="1.6" opacity=".55"/></svg></span>
+      </span>
+    </div>
+
+    <!-- Menu principal -->
+    <section id="home" class="view active">
+      <div class="home-body">
+        <div class="home-widgets" id="home-widgets">
+          <div class="wg wg-cal" data-w="cal" aria-label="Calendrier"><span id="wg-wd" class="wg-wd"></span><b id="wg-day" class="wg-day"></b><span id="wg-sub" class="wg-sub"></span></div>
+          <div class="wg wg-clock" data-w="clock" aria-label="Horloge">
+              <svg id="wg-face" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" class="dial"/><g class="ticks"></g><g class="nums"></g><line class="hh" x1="50" y1="52" x2="50" y2="29"/><line class="mh" x1="50" y1="53" x2="50" y2="14"/><g class="sh"><line x1="50" y1="59" x2="50" y2="11"/><circle cx="50" cy="50" r="2.6"/></g><circle cx="50" cy="50" r="1.1" class="pin"/></svg>
+            </div>
+          <button class="hw hidden" id="hw-services" data-w="services" aria-label="Ouvrir Services">
+            <div class="hw-head"><svg class="i"><use href="#ic-briefcase"/></svg><span>Entreprises ouvertes</span><b id="hw-count"></b></div>
+            <div class="hw-list" id="hw-list"></div>
+          </button>
+        </div>
+        <div class="home-apps" id="home-apps"></div>
+      </div>
+      <button class="home-search" id="home-search" aria-label="Rechercher"><svg class="i"><use href="#ic-search"/></svg><span>Rechercher</span></button>
+      <div class="dock" id="dock"></div>
+      <button class="home-add" id="home-add"><svg class="i"><use href="#ic-plus"/></svg><span>Ajouter un widget</span></button>
+    </section>
+
+    <!-- Navigateur -->
+    <section id="browser" class="view">
+      <div class="tabs" id="tabs"></div>
+      <div class="toolbar">
+        <button id="b-back" title="Précédent" aria-label="Précédent"><svg class="i"><use href="#ic-left"/></svg></button>
+        <button id="b-fwd" title="Suivant" aria-label="Suivant"><svg class="i"><use href="#ic-right"/></svg></button>
+        <button id="b-reload" title="Actualiser" aria-label="Actualiser"><svg class="i"><use href="#ic-refresh"/></svg></button>
+        <button id="b-home" title="Accueil du navigateur" aria-label="Accueil du navigateur"><svg class="i"><use href="#ic-home"/></svg></button>
+        <input id="url" type="text" spellcheck="false" autocomplete="off" placeholder="Rechercher ou saisir une adresse" aria-label="Adresse">
+        <button id="b-mode" title="Frame : clavier natif, le site doit autoriser l'affichage. Rendu : tout site, sans clavier.">Frame</button>
+        <button id="b-zoomout" title="Dézoomer" aria-label="Dézoomer"><svg class="i"><use href="#ic-minus"/></svg></button>
+        <button id="b-zoom" title="Zoom (clic : valeur par défaut)">60%</button>
+        <button id="b-zoomin" title="Zoomer" aria-label="Zoomer"><svg class="i"><use href="#ic-plus"/></svg></button>
+        <button id="b-star" title="Ajouter aux favoris" aria-label="Ajouter aux favoris"><svg class="i"><use href="#ic-star"/></svg></button>
+      </div>
+      <div class="bookmarks" id="bookmarks"></div>
+      <div class="content">
+        <div id="frames"></div>
+        <div id="surface"></div>
+        <input id="kb" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" tabindex="-1" aria-hidden="true">
+        <div id="loading" class="loading hidden">Chargement&hellip;</div>
+        <div id="app-splash" class="app-splash gone"></div>
+        <div id="blocked" class="blocked hidden">
+          <span>Page vide ? Le site refuse peut-être l'affichage en frame.</span>
+          <button id="blocked-switch">Mode rendu</button>
+          <button id="blocked-close" aria-label="Fermer">&times;</button>
+        </div>
+        <div id="newtab" class="newtab">
+          <h2>Nouvel onglet</h2>
+          <p>Saisis une adresse ou une recherche dans la barre ci-dessus.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Réglages : liste groupee, navigation en pile -->
+    <section id="settings" class="view">
+      <div class="st-stack" id="st-stack">
+
+        <div class="st-page st-root" id="sp-root">
+          <div class="st-body">
+            <h1 class="st-large">Réglages</h1>
+            <div class="st-group">
+              <button class="st-row st-link" data-go="sp-display"><span class="st-ico c-blue"><svg class="i"><use href="#ic-monitor"/></svg></span><span class="grow">Affichage</span><span class="st-val" id="v-display"></span><svg class="i st-chev"><use href="#ic-chev-r"/></svg></button>
+              <button class="st-row st-link" data-go="sp-controls" id="tab-controls"><span class="st-ico c-orange"><svg class="i"><use href="#ic-gamepad"/></svg></span><span class="grow">Contrôles</span><svg class="i st-chev"><use href="#ic-chev-r"/></svg></button>
+            </div>
+            <div class="st-group">
+              <button class="st-row st-link" data-go="sp-browser"><span class="st-ico c-cyan"><svg class="i"><use href="#ic-globe"/></svg></span><span class="grow">Navigateur</span><span class="st-val" id="v-browser"></span><svg class="i st-chev"><use href="#ic-chev-r"/></svg></button>
+              <button class="st-row st-link" data-go="sp-notifs"><span class="st-ico c-red"><svg class="i"><use href="#ic-bell"/></svg></span><span class="grow">Notifications</span><svg class="i st-chev"><use href="#ic-chev-r"/></svg></button>
+              <button class="st-row st-link" data-go="sp-airdrop"><span class="st-ico c-blue"><svg class="i"><use href="#ic-airdrop"/></svg></span><span class="grow">AirDrop</span><span class="st-val" id="v-airdrop"></span><svg class="i st-chev"><use href="#ic-chev-r"/></svg></button>
+              <button class="st-row st-link" data-go="sp-lock"><span class="st-ico c-green"><svg class="i"><use href="#ic-lock"/></svg></span><span class="grow">Verrouillage</span><span class="st-val" id="v-lock"></span><svg class="i st-chev"><use href="#ic-chev-r"/></svg></button>
+              <button class="st-row st-link" data-go="sp-tablet"><span class="st-ico c-gray"><svg class="i"><use href="#ic-tablet"/></svg></span><span class="grow">Tablette</span><svg class="i st-chev"><use href="#ic-chev-r"/></svg></button>
+            </div>
+            <div class="st-foot st-about">rz-tablet</div>
+          </div>
+        </div>
+
+        <div class="st-dim"></div>
+
+        <div class="st-page" id="sp-display">
+          <header class="st-head"><button class="st-back" data-back><svg class="i"><use href="#ic-chevron"/></svg>Réglages</button><span class="st-title">Affichage</span></header>
+          <div class="st-body">
+            <div class="wp-preview" id="wp-preview"><div class="wp-time" id="wp-time"></div><div class="wp-dots"><i></i><i></i><i></i><i></i></div></div>
+            <div class="st-sec">
+              <div class="st-label">Fond d'écran</div>
+              <div class="st-group"><div id="wallpapers" class="wp-grid"></div></div>
+            </div>
+            <div class="st-sec">
+              <div class="st-label">Image en ligne</div>
+              <div class="st-group">
+                <div class="st-row col">
+                  <div class="wp-url">
+                    <input id="s-wall-url" class="sv-input" type="url" placeholder="https://exemple.com/image.jpg" spellcheck="false" autocomplete="off" aria-label="Lien de l'image">
+                    <button id="s-wall-set" class="wp-url-btn">Utiliser</button>
+                  </div>
+                </div>
+                <button class="st-row st-action danger hidden" id="s-wall-del">Retirer ma photo</button>
+              </div>
+              <div class="st-foot" id="s-wall-msg">Colle le lien d'une image (https) : elle devient le fond de l'accueil et de l'écran verrouillé.</div>
+            </div>
+            <div class="st-sec">
+              <div class="st-group">
+                <div class="st-row col">
+                  <div class="st-line"><span class="grow">Luminosité</span><span class="st-val" id="s-br-val"></span></div>
+                  <input type="range" id="s-bright" min="30" max="100" step="5">
+                </div>
+              </div>
+            </div>
+            <div class="st-sec">
+              <div class="st-group">
+                <label class="st-row"><span class="grow">Horloge 24 h<small>Désactivé : format 12 h</small></span><span class="sw"><input type="checkbox" id="s-clock24"><span></span></span></label>
+              </div>
+            </div>
+            <div class="st-sec">
+              <div class="st-group">
+                <div class="st-row col">
+                  <div class="st-line"><span class="grow">Opacité en marchant</span><span class="st-val" id="s-op-val"></span></div>
+                  <input type="range" id="s-opacity" min="10" max="100" step="5">
+                </div>
+              </div>
+              <div class="st-foot">Transparence de la tablette quand le personnage bouge.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="st-page" id="sp-controls">
+          <header class="st-head"><button class="st-back" data-back><svg class="i"><use href="#ic-chevron"/></svg>Réglages</button><span class="st-title">Contrôles</span></header>
+          <div class="st-body">
+            <div class="st-sec" id="row-walk">
+              <div class="st-group">
+                <label class="st-row"><span class="grow">Marcher avec la tablette<small>Garde les touches de déplacement actives</small></span><span class="sw"><input type="checkbox" id="s-walk"><span></span></span></label>
+              </div>
+              <div class="st-foot">Échap ferme seulement la tablette.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="st-page" id="sp-browser">
+          <header class="st-head"><button class="st-back" data-back><svg class="i"><use href="#ic-chevron"/></svg>Réglages</button><span class="st-title">Navigateur</span></header>
+          <div class="st-body">
+            <div class="st-sec">
+              <div class="st-group">
+                <div class="st-row"><span class="grow">Zoom des pages<small>Valeur actuelle du navigateur</small></span><select id="s-zoom"></select></div>
+              </div>
+            </div>
+            <div class="st-sec">
+              <div class="st-label">Sites en mode forcé</div>
+              <div class="st-group"><div class="st-row col"><div id="s-modes" class="chips"></div></div></div>
+              <div class="st-foot">Frame ou Rendu choisi à la main. La croix reprend la détection automatique.</div>
+            </div>
+            <div class="st-sec">
+              <div class="st-group"><button class="st-row st-action" id="s-clear-bm">Réinitialiser les favoris</button></div>
+              <div class="st-foot">Revient aux favoris par défaut.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="st-page" id="sp-tablet">
+          <header class="st-head"><button class="st-back" data-back><svg class="i"><use href="#ic-chevron"/></svg>Réglages</button><span class="st-title">Tablette</span></header>
+          <div class="st-body">
+            <div class="st-sec">
+              <div class="st-group"><button class="st-row st-action" id="s-recenter">Recentrer la fenêtre</button></div>
+              <div class="st-foot">Remet la position et la taille par défaut.</div>
+            </div>
+            <div class="st-sec">
+              <div class="st-group"><button class="st-row st-action danger" id="s-reset">Tout réinitialiser</button></div>
+              <div class="st-foot">Efface les réglages, favoris et modes mémorisés.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="st-page" id="sp-notifs">
+          <header class="st-head"><button class="st-back" data-back><svg class="i"><use href="#ic-chevron"/></svg>Réglages</button><span class="st-title">Notifications</span></header>
+          <div class="st-body">
+            <div class="st-sec">
+              <div class="st-group">
+                <label class="st-row"><span class="st-ico c-indigo"><svg class="i"><use href="#ic-moon"/></svg></span><span class="grow">Ne pas déranger<small>Ni bannière ni son : les notifications arrivent en silence dans le centre</small></span><span class="sw"><input type="checkbox" id="s-dnd"><span></span></span></label>
+              </div>
+            </div>
+            <div class="st-sec">
+              <div class="st-group">
+                <label class="st-row"><span class="grow">Aperçu tablette rangée<small>La tablette dépasse en bas de l'écran le temps de lire la notification</small></span><span class="sw"><input type="checkbox" id="s-peek"><span></span></span></label>
+                <label class="st-row"><span class="grow">Son<small>Petit son à chaque notification ou demande AirDrop</small></span><span class="sw"><input type="checkbox" id="s-sound"><span></span></span></label>
+                <label class="st-row"><span class="grow">Sur l'écran verrouillé<small>Les notifications non lues s'affichent sous l'horloge</small></span><span class="sw"><input type="checkbox" id="s-lockn"><span></span></span></label>
+              </div>
+              <div class="st-foot">Clique sur l'îlot en haut de l'écran pour voir toutes tes notifications.</div>
+            </div>
+            <div class="st-sec">
+              <div class="st-group"><button class="st-row st-action" id="s-notif-test">Envoyer une notification de test</button></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="st-page" id="sp-airdrop">
+          <header class="st-head"><button class="st-back" data-back><svg class="i"><use href="#ic-chevron"/></svg>Réglages</button><span class="st-title">AirDrop</span></header>
+          <div class="st-body">
+            <div class="st-sec">
+              <div class="st-group">
+                <button class="st-row ad-opt" data-a="off"><span class="grow">Réception désactivée</span><svg class="i chk"><use href="#ic-check"/></svg></button>
+                <button class="st-row ad-opt" data-a="all"><span class="grow">Tout le monde<small>Les tablettes à quelques mètres peuvent te proposer une note ou une position</small></span><svg class="i chk"><use href="#ic-check"/></svg></button>
+              </div>
+              <div class="st-foot">Tu choisis toujours d'accepter ou de refuser ce qu'on t'envoie. Pour partager, touche le bouton de partage dans Notes, Carte ou Véhicules.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="st-page" id="sp-lock">
+          <header class="st-head"><button class="st-back" data-back><svg class="i"><use href="#ic-chevron"/></svg>Réglages</button><span class="st-title">Verrouillage</span></header>
+          <div class="st-body">
+            <div class="st-sec">
+              <div class="st-group">
+                <button class="st-row lk-opt" data-m="none"><span class="grow">Aucun</span><svg class="i chk"><use href="#ic-check"/></svg></button>
+                <button class="st-row lk-opt" data-m="pin"><span class="grow">Code à 4 chiffres</span><svg class="i chk"><use href="#ic-check"/></svg></button>
+                <button class="st-row lk-opt" data-m="face"><span class="grow">Face ID<small>Reconnaît le propriétaire, le code sert de secours</small></span><svg class="i chk"><use href="#ic-check"/></svg></button>
+              </div>
+              <div class="st-foot">Le verrouillage suit cette tablette, même si elle change de main. Il est demandé à chaque ouverture.</div>
+            </div>
+            <div class="st-sec" id="lk-change">
+              <div class="st-group"><button class="st-row st-action" id="lk-change-btn">Changer le code</button></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- App : la boutique -->
+    <section id="store" class="view">
+      <div class="st-stack" id="as-stack">
+        <div class="st-page st-root" id="as-root">
+          <div class="st-body as-body">
+            <div class="as-top"><div class="as-date" id="as-date"></div><h1 class="st-large">App</h1></div>
+            <div class="as-hero" id="as-hero" role="button" tabindex="0"></div>
+            <div class="st-sec">
+              <div class="st-label">Toutes les apps</div>
+              <div class="as-list" id="as-list"></div>
+            </div>
+          </div>
+        </div>
+        <div class="st-dim"></div>
+        <div class="st-page" id="as-detail">
+          <header class="st-head"><button class="st-back" data-asback><svg class="i"><use href="#ic-chevron"/></svg>App</button><span class="st-title" id="as-d-title"></span></header>
+          <div class="st-body as-body" id="as-d-body"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services : annuaire des entreprises -->
+    <section id="services" class="view">
+      <div class="st-stack" id="sv-stack">
+
+        <div class="st-page st-root" id="sv-root">
+          <div class="st-body">
+            <div class="sv-top">
+              <h1 class="st-large">Services</h1>
+              <button class="sv-add hidden" id="sv-add" title="Ajouter une entreprise" aria-label="Ajouter une entreprise"><svg class="i"><use href="#ic-plus"/></svg></button>
+            </div>
+            <div class="sv-panel" id="sv-dir">
+              <div class="seg" id="sv-filter"><button class="on" data-f="all">Toutes</button><button data-f="open">Ouvertes</button></div>
+              <div class="st-group" id="sv-list"></div>
+              <div class="st-foot" id="sv-sum"></div>
+            </div>
+            <div class="sv-panel hidden" id="sv-msgs">
+              <div class="st-group" id="sv-threads"></div>
+            </div>
+          </div>
+        </div>
+
+        <nav class="sv-tabbar" id="sv-tabs" aria-label="Services">
+          <button class="on" data-t="dir"><svg class="i"><use href="#ic-briefcase"/></svg><span>Entreprises</span></button>
+          <button data-t="msg"><svg class="i"><use href="#ic-message"/></svg><span>Messages</span><i class="sv-dot hidden" id="sv-unread"></i></button>
+        </nav>
+
+        <div class="st-dim"></div>
+
+        <div class="st-page" id="sv-detail">
+          <header class="st-head"><button class="st-back" data-svback><svg class="i"><use href="#ic-chevron"/></svg>Services</button><span class="st-title" id="sv-detail-title"></span></header>
+          <div class="st-body" id="sv-detail-body"></div>
+        </div>
+
+        <div class="st-page chat" id="sv-thread">
+          <header class="st-head"><button class="st-back" data-svback><svg class="i"><use href="#ic-chevron"/></svg>Retour</button><span class="st-title sv-th-id"><span id="sv-thread-av"></span><span id="sv-thread-title"></span></span></header>
+          <div class="sv-chat" id="sv-chat"></div>
+          <div class="sv-note hidden" id="sv-closed-note">Fermé pour le moment : ils répondront à la prochaine prise de service.</div>
+          <div class="sv-result err" id="sv-send-msg"></div>
+          <div class="sv-composer">
+            <button class="sv-icbtn" id="sv-attach" title="Joindre ma position" aria-label="Joindre ma position" aria-pressed="false"><svg class="i"><use href="#ic-pin"/></svg></button>
+            <input type="text" id="sv-text" class="sv-input" maxlength="300" placeholder="Message" autocomplete="off">
+            <button class="sv-icbtn go" id="sv-send" title="Envoyer" aria-label="Envoyer"><svg class="i"><use href="#ic-send"/></svg></button>
+          </div>
+        </div>
+
+        <div class="st-page" id="sv-edit">
+          <header class="st-head"><button class="st-back" data-svback><svg class="i"><use href="#ic-chevron"/></svg>Retour</button><span class="st-title" id="sv-edit-title"></span></header>
+          <div class="st-body">
+            <div class="st-sec"><div class="st-label">Nom affiché</div><input type="text" id="sv-e-label" class="sv-input" maxlength="40" placeholder="Ex. Police de Los Santos"></div>
+            <div class="st-sec"><div class="st-label">Métier</div><select id="sv-e-job" class="sv-input"></select></div>
+            <div class="st-sec"><div class="st-label">Description</div><input type="text" id="sv-e-desc" class="sv-input" maxlength="160" placeholder="Une phrase sur l'entreprise"></div>
+            <div class="st-sec">
+              <div class="st-label">Image</div>
+              <div class="sv-imgrow"><span class="sv-logo" id="sv-e-prev"></span><input type="text" id="sv-e-img" class="sv-input" maxlength="300" placeholder="https://exemple.com/logo.png"></div>
+              <div class="st-foot">Lien direct vers une image (https). Les initiales s'affichent sinon.</div>
+            </div>
+            <div class="st-sec"><div class="st-label">Site web</div><input type="text" id="sv-e-web" class="sv-input" maxlength="200" placeholder="https://"><div class="st-foot">S'ouvre dans le navigateur de la tablette.</div></div>
+            <div class="st-sec">
+              <div class="st-group">
+                <label class="st-row"><span class="grow">Emplacement : ma position<small id="sv-e-pos-hint"></small></span><span class="sw"><input type="checkbox" id="sv-e-pos"><span></span></span></label>
+              </div>
+            </div>
+            <div class="st-sec">
+              <div class="st-group"><button class="st-row st-action" id="sv-save">Enregistrer</button></div>
+              <div class="st-foot sv-result err" id="sv-e-err"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Notes : liste -> editeur -->
+    <section id="notes" class="view">
+      <div class="st-stack" id="no-stack">
+        <div class="st-page st-root" id="no-root">
+          <div class="st-body no-body">
+            <h1 class="st-large">Notes</h1>
+            <input id="no-search" class="no-search" type="search" placeholder="Rechercher" spellcheck="false" autocomplete="off" aria-label="Rechercher dans les notes">
+            <div class="st-group no-list" id="no-list"></div>
+            <div class="no-empty hidden" id="no-empty">Aucune note</div>
+          </div>
+          <div class="no-bar"><span id="no-count"></span><button id="no-new" class="no-new" title="Nouvelle note" aria-label="Nouvelle note"><svg class="i"><use href="#ic-compose"/></svg></button></div>
+        </div>
+        <div class="st-dim"></div>
+        <div class="st-page no-edit" id="no-edit">
+          <header class="no-head">
+            <button class="no-back" id="no-back"><svg class="i"><use href="#ic-chevron"/></svg>Notes</button>
+            <span class="no-date" id="no-date"></span>
+            <button class="no-share" id="no-share" title="Partager avec AirDrop" aria-label="Partager"><svg class="i"><use href="#ic-share"/></svg></button>
+            <button class="no-del" id="no-del" title="Supprimer la note" aria-label="Supprimer la note"><svg class="i"><use href="#ic-trash"/></svg></button>
+            <button class="no-done" id="no-done">OK</button>
+          </header>
+          <div class="no-msg" id="no-msg"></div>
+          <textarea id="no-text" class="no-text" maxlength="4000" spellcheck="false" placeholder="Commence à écrire…" aria-label="Texte de la note"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calculatrice -->
+    <section id="calculator" class="view">
+      <div class="ca-wrap">
+        <div class="ca-screen"><div class="ca-expr" id="ca-expr"></div><div class="ca-disp" id="ca-disp">0</div></div>
+        <div class="ca-pad" id="ca-pad"></div>
+      </div>
+    </section>
+
+    <!-- Carte -->
+    <section id="maps" class="view">
+      <div id="mp-map" class="mp-map"></div>
+      <button id="mp-ret" class="mp-ret hidden"><svg class="i"><use href="#ic-chevron"/></svg><span id="mp-ret-l"></span></button>
+      <div class="mp-ctl">
+        <button id="mp-me" class="mp-btn on" title="Ma position" aria-label="Ma position"><svg class="i"><use href="#ic-locate"/></svg></button>
+        <div class="mp-zoom">
+          <button id="mp-zin" class="mp-btn" title="Zoomer" aria-label="Zoomer"><svg class="i"><use href="#ic-plus"/></svg></button>
+          <button id="mp-zout" class="mp-btn" title="Dézoomer" aria-label="Dézoomer"><svg class="i"><use href="#ic-minus"/></svg></button>
+        </div>
+      </div>
+      <div class="mp-card hidden" id="mp-card">
+        <div class="mp-card-tx"><b id="mp-card-t"></b><span><span id="mp-card-s"></span><span id="mp-card-d" class="mp-card-d"></span></span></div>
+        <button id="mp-gps" class="mp-gps">Itinéraire</button>
+        <button id="mp-share" class="mp-x mp-share" aria-label="Partager" title="Partager avec AirDrop"><svg class="i"><use href="#ic-share"/></svg></button>
+        <button id="mp-card-x" class="mp-x" aria-label="Fermer"><svg class="i"><use href="#ic-close"/></svg></button>
+      </div>
+    </section>
+
+    <!-- Vehicules : carte grise et localisation -->
+    <section id="vehicles" class="view">
+      <div class="st-stack" id="vh-stack">
+        <div class="st-page st-root" id="vh-root">
+          <div class="st-body">
+            <h1 class="st-large">Véhicules</h1>
+            <div class="seg hidden" id="vh-seg"><button class="on" data-tab="mine">Mes véhicules</button><button data-tab="company" id="vh-seg-co">Entreprise</button></div>
+            <div class="vh-note hidden" id="vh-note"></div>
+            <div class="st-sec">
+              <div class="st-group hidden" id="vh-list"></div>
+              <div class="st-foot" id="vh-sum"></div>
+            </div>
+            <div class="vh-empty hidden" id="vh-empty"></div>
+          </div>
+        </div>
+        <div class="st-dim"></div>
+        <div class="st-page" id="vh-detail">
+          <header class="st-head"><button class="st-back" id="vh-back" aria-label="Retour"><svg class="i"><use href="#ic-chevron"/></svg></button><span class="st-title" id="vh-title"></span></header>
+          <div class="st-body" id="vh-detail-body"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Banque : solde et historique -->
+    <section id="bank" class="view">
+      <div class="bk-scroll" id="bk-scroll">
+        <div class="st-body">
+          <h1 class="st-large">Banque</h1>
+          <div class="bk-card">
+            <div class="bk-top"><span id="bk-brand">Banque</span><svg class="i"><use href="#ic-bank"/></svg></div>
+            <span class="bk-label">Solde du compte</span>
+            <b id="bk-bal">…</b>
+            <span id="bk-owner"></span>
+          </div>
+          <div class="bk-stats">
+            <div class="bk-stat in"><small>Entrées sur 7 jours</small><b id="bk-in"></b></div>
+            <div class="bk-stat out"><small>Sorties sur 7 jours</small><b id="bk-out"></b></div>
+          </div>
+          <div class="seg" id="bk-filter"><button class="on" data-f="all">Tout</button><button data-f="in">Entrées</button><button data-f="out">Sorties</button></div>
+          <div class="bk-list" id="bk-list"></div>
+          <button class="bk-more hidden" id="bk-more">Afficher plus</button>
+          <div class="bk-empty hidden" id="bk-empty"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AirDrop : feuille de partage et demande recue -->
+    <div id="ad-sheet" class="ad-sheet hidden" aria-label="Partager">
+      <div class="ad-scrim"></div>
+      <div class="ad-panel">
+        <div class="ad-head"><span class="ad-thumb" id="ad-thumb"></span><span class="ad-what"><b id="ad-title"></b><small id="ad-sub"></small></span><button class="ad-x" id="ad-x" aria-label="Fermer"><svg class="i"><use href="#ic-close"/></svg></button></div>
+        <div class="ad-label"><svg class="i"><use href="#ic-airdrop"/></svg>AirDrop</div>
+        <div class="ad-people hidden" id="ad-people"></div>
+        <div class="ad-empty" id="ad-empty"><span class="ad-radar"><i></i><i></i><svg class="i"><use href="#ic-airdrop"/></svg></span><span>Recherche des tablettes à proximité…</span><small>L'autre personne doit avoir sa tablette sur elle, à quelques mètres, et la réception AirDrop activée.</small></div>
+      </div>
+    </div>
+    <div id="ad-in" class="ad-in hidden" role="dialog" aria-label="AirDrop">
+      <div class="ad-in-card">
+        <span class="ad-in-ic"><svg class="i"><use href="#ic-airdrop"/></svg></span>
+        <b>AirDrop</b>
+        <p id="ad-in-msg"></p>
+        <div class="ad-in-prev" id="ad-in-prev"></div>
+        <div class="ad-in-btns"><button id="ad-decline">Refuser</button><button id="ad-accept" class="pri">Accepter</button></div>
+      </div>
+    </div>
+
+    <!-- Galerie de widgets (mode edition de l'accueil, bouton +) -->
+    <div id="wgal" class="wgal hidden" aria-label="Widgets">
+      <div class="wgal-sheet">
+        <div class="wgal-head"><b>Widgets</b><button id="wgal-close" class="wgal-close" aria-label="Fermer"><svg class="i"><use href="#ic-close"/></svg></button></div>
+        <div id="wgal-list" class="wgal-list"></div>
+      </div>
+    </div>
+
+    <!-- Apps recentes (glisser vers le haut sur la barre du bas et marquer une pause, ou appui long) -->
+    <div id="asw" class="asw hidden" aria-label="Apps récentes">
+      <div id="asw-row" class="asw-row"></div>
+      <div id="asw-empty" class="asw-empty hidden">Aucune app récente</div>
+      <div id="asw-hint" class="asw-hint">Glisse une app vers le haut pour la fermer</div>
+    </div>
+
+    <!-- Recherche (glisser vers le bas sur l'accueil, ou la pastille Rechercher) -->
+    <div id="sp" class="sp hidden" aria-label="Recherche">
+      <div class="sp-box">
+        <div class="sp-field"><svg class="i"><use href="#ic-search"/></svg><input id="sp-q" type="search" placeholder="Rechercher" autocomplete="off" spellcheck="false"><button id="sp-x" class="sp-x hidden" aria-label="Effacer"><svg class="i"><use href="#ic-close"/></svg></button></div>
+        <div id="sp-res" class="sp-res"></div>
+      </div>
+    </div>
+
+    <!-- Centre de controle (clic sur le wifi / la batterie, ou glisser vers le bas sur la droite de la barre d'etat) -->
+    <div id="cc" class="cc hidden" aria-label="Centre de contrôle">
+      <div class="cc-grid">
+        <div class="cc-mod cc-conn">
+          <div class="cc-t"><button id="cc-airdrop" aria-label="AirDrop"><svg class="i"><use href="#ic-airdrop"/></svg></button><b>AirDrop</b><small></small></div>
+          <div class="cc-t"><button id="cc-walk" aria-label="Marcher avec la tablette"><svg class="i"><use href="#ic-walk"/></svg></button><b>Marche</b><small></small></div>
+          <div class="cc-t"><button id="cc-sound" aria-label="Son des notifications"><svg class="i"><use href="#ic-sound"/></svg></button><b>Son</b><small></small></div>
+          <div class="cc-t"><button id="cc-peek" aria-label="Aperçu tablette rangée"><svg class="i"><use href="#ic-eye"/></svg></button><b>Aperçu</b><small></small></div>
+        </div>
+        <div class="cc-mod cc-slider" id="cc-bright" role="slider" aria-label="Luminosité" title="Luminosité"><div class="cc-fill"></div><svg class="i"><use href="#ic-sun"/></svg></div>
+        <div class="cc-mod cc-slider" id="cc-walkop" role="slider" aria-label="Opacité en marchant" title="Opacité en marchant"><div class="cc-fill"></div><svg class="i"><use href="#ic-walk"/></svg></div>
+        <button class="cc-mod" id="cc-lock" title="Verrouiller" aria-label="Verrouiller"><svg class="i"><use href="#ic-lock"/></svg></button>
+        <button class="cc-mod cc-wide" id="cc-dnd"><span class="cc-ic"><svg class="i"><use href="#ic-moon"/></svg></span><span><b>Ne pas déranger</b><small id="cc-dnd-s"></small></span></button>
+        <button class="cc-mod" id="cc-center" title="Recentrer la fenêtre" aria-label="Recentrer la fenêtre"><svg class="i"><use href="#ic-center"/></svg></button>
+        <button class="cc-mod" data-app="calculator" title="Calculatrice" aria-label="Calculatrice"><svg class="i"><use href="#ic-calc"/></svg></button>
+        <button class="cc-mod" data-app="notes" title="Notes" aria-label="Notes"><svg class="i"><use href="#ic-compose"/></svg></button>
+        <button class="cc-mod" data-app="maps" title="Carte" aria-label="Carte"><svg class="i"><use href="#ic-map"/></svg></button>
+      </div>
+    </div>
+
+    <!-- Centre de notifications (clic sur l'ilot) -->
+    <div id="nc" class="nc hidden" aria-label="Notifications">
+      <div class="nc-head"><h2>Notifications</h2><div class="nc-acts"><button id="nc-dnd" class="nc-dnd" title="Ne pas déranger"><svg class="i"><use href="#ic-moon"/></svg><span>Ne pas déranger</span></button><button id="nc-clear" class="nc-clear">Effacer</button></div></div>
+      <div id="nc-list" class="nc-list"></div>
+    </div>
+
+    <!-- Ecran de verrouillage (style iOS) -->
+    <div id="lock" class="lock hidden" data-stage="ls" role="dialog" aria-label="Tablette verrouillée">
+      <div id="lock-pc" class="lk-pc">
+        <div id="lock-pc-in" class="lk-pc-in">
+          <div id="lock-title" class="lk-title"></div>
+          <div id="lock-dots" class="lk-dots"><i></i><i></i><i></i><i></i></div>
+          <div id="lock-msg" class="lk-msg" aria-live="polite"></div>
+          <div id="lock-pad" class="pad"></div>
+        </div>
+        <button id="lock-alt" class="lk-alt">Annuler</button>
+      </div>
+      <div id="lock-ls" class="lk-ls">
+        <div id="lock-glyph" class="lk-glyph" aria-hidden="true">
+          <svg class="lk-padlock" viewBox="0 0 24 24"><path class="shackle" d="M8 11.5V8a4 4 0 0 1 8 0v3.5"/><rect class="body" x="4.5" y="10.5" width="15" height="11" rx="2.8"/></svg>
+          <svg class="lk-faceid" viewBox="0 0 64 64"><path d="M8 22V13a5 5 0 0 1 5-5h9M42 8h9a5 5 0 0 1 5 5v9M56 42v9a5 5 0 0 1-5 5h-9M22 56h-9a5 5 0 0 1-5-5v-9"/><path d="M24 25v5M40 25v5M32 25v12h-3M24 44c4.5 4 11.5 4 16 0"/></svg>
+        </div>
+        <div class="lk-head">
+          <div id="lock-date" class="lk-date"></div>
+          <div id="lock-time" class="lk-time"></div>
+        </div>
+        <div id="lock-notifs" class="lk-notifs"></div>
+        <button id="lock-power" class="lk-round" title="Éteindre" aria-label="Éteindre"><svg class="i"><use href="#ic-power"/></svg></button>
+        <button id="lock-swipe" class="lk-swipe" aria-label="Ouvrir"><span id="lock-hint"></span><i class="lk-bar"></i></button>
+      </div>
+    </div>
+
+    <div class="navbar">
+      <button id="n-back" title="Retour" aria-label="Retour"><svg class="i"><use href="#ic-chevron"/></svg></button>
+      <button id="n-home" title="Accueil" aria-label="Accueil"><span class="pill"></span></button>
+      <button id="n-close" title="Éteindre" aria-label="Éteindre"><svg class="i"><use href="#ic-power"/></svg></button>
+    </div>
+    <div id="dim" class="dim"></div>
+    <div class="rs rs-t" data-dir="t"></div><div class="rs rs-r" data-dir="r"></div><div class="rs rs-b" data-dir="b"></div><div class="rs rs-l" data-dir="l"></div><div class="rs rs-tl" data-dir="tl"></div><div class="rs rs-tr" data-dir="tr"></div><div class="rs rs-br" data-dir="br"></div><div class="rs rs-bl" data-dir="bl"></div>
+  </div>
+</div>
+<script src="js/app/core.js"></script>
+<script src="js/app/browser.js"></script>
+<script src="js/app/window.js"></script>
+<script src="js/app/settings.js"></script>
+<script src="js/app/main.js"></script>
+<script src="js/services.js"></script>
+<script src="js/notify.js"></script>
+<script src="js/home.js"></script>
+<script src="js/store.js"></script>
+<script src="js/lock.js"></script>
+<script src="assets/leaflet/leaflet.js"></script>
+<script src="js/notes.js"></script>
+<script src="js/calc.js"></script>
+<script src="js/map.js"></script>
+<script src="js/vehicles.js"></script>
+<script src="js/bank.js"></script>
+<script src="js/airdrop.js"></script>
+<script src="js/cc.js"></script>
+<script src="js/widgets.js"></script>
+<script src="js/switcher.js"></script>
+<script src="js/search.js"></script>
+</body>
+</html>

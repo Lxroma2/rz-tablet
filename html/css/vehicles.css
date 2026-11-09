@@ -1,0 +1,76 @@
+/* ===================================================================
+   Vehicules
+   Liste (onglets Mes vehicules / Entreprise) puis fiche : carte grise, etat, position.
+   =================================================================== */
+#vehicles { background: var(--bg); }
+#vh-root .st-body { padding-bottom: 40px; }
+.vh-note { padding: 14px 18px; border-radius: var(--r-group); background: var(--s1); font-size: 14px; line-height: 1.45; color: var(--muted); }
+.vh-empty { padding: 48px 20px; text-align: center; font-size: 15px; line-height: 1.45; color: var(--muted); }
+
+/* lignes */
+.vh-item { min-height: 66px; }
+.st-group > .vh-item ~ .vh-item::before { left: 74px; }
+.vh-item b { display: block; font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vh-item small { display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; }
+.vh-st { overflow: hidden; text-overflow: ellipsis; }
+.vh-tag {
+  flex: none; padding: 1px 6px; border-radius: 5px; background: #f2f4f8; color: #14287a;
+  font-size: 12px; font-weight: 700; letter-spacing: .06em; font-variant-numeric: tabular-nums;
+}
+
+/* pastille d'etat : bleu = sorti, orange = introuvable, gris = au garage */
+.vh-ic {
+  width: 42px; height: 42px; flex: none; border-radius: 12px; display: grid; place-items: center; color: #fff;
+  background: linear-gradient(160deg, #9aa1b0, #596071); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25);
+}
+.vh-ic.live { background: linear-gradient(160deg, #4da3ff, #0a6cf0); }
+.vh-ic.lost, .vh-ic.unknown { background: linear-gradient(160deg, #ffb340, #f07a0a); }
+.vh-ic svg.car { width: 26px; height: 26px; }
+.vh-ic.sm { width: 30px; height: 30px; border-radius: var(--r-tile); }
+.vh-ic.sm svg.i { width: 17px; height: 17px; stroke-width: 1.8; }
+
+/* carte grise */
+.vh-doc {
+  position: relative; overflow: hidden; padding: 18px 20px 20px; border-radius: 22px; color: #1d2433;
+  background: linear-gradient(135deg, #eef3ea 0%, #dde8e6 48%, #e8e1ee 100%);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .35), inset 0 0 0 1px rgba(255, 255, 255, .6);
+}
+.vh-doc::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-radial-gradient(circle at 88% 12%, rgba(30, 90, 120, .07) 0 1px, transparent 1px 7px);
+}
+.vh-doc > * { position: relative; }
+.vh-doc-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #4f6073; }
+.vh-doc-top b { font-weight: 700; color: #1d2433; text-align: right; }
+.vh-plate {
+  width: 236px; margin: 16px auto 18px; padding: 5px 0 7px; border-radius: 10px; display: flex; flex-direction: column; align-items: center;
+  background: linear-gradient(180deg, #fff, #eceff5); box-shadow: inset 0 0 0 2px #1d2433, 0 3px 8px rgba(0, 0, 0, .18);
+}
+.vh-plate small { font-family: "Brush Script MT", "Segoe Script", cursive; font-size: 16px; line-height: 1; color: #c8102e; }
+.vh-plate b { font-size: 30px; font-weight: 800; line-height: 1.1; letter-spacing: .08em; color: #14287a; font-variant-numeric: tabular-nums; }
+.vh-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 18px; margin: 0; }
+.vh-fields div { min-width: 0; }
+.vh-fields .wide { grid-column: 1 / -1; }
+.vh-fields dt { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #5b6b7e; }
+.vh-fields dd { margin: 2px 0 0; font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* etat */
+.vh-meter, .vh-where { cursor: default; }
+.vh-meter:active, .vh-where:active { background: none; }
+.vh-meter { display: grid; grid-template-columns: 110px 1fr 52px; gap: 14px; }
+.vh-meter i { position: relative; height: 6px; border-radius: 3px; overflow: hidden; background: rgba(255, 255, 255, .12); }
+.vh-meter i::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--p); border-radius: inherit; background: var(--c, var(--ok)); }
+.vh-pct { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* actions */
+.vh-actions { display: flex; gap: 10px; }
+.vh-btn {
+  flex: 1; height: 46px; border: none; border-radius: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--s1); color: var(--accent); font-size: 16px; font-weight: 600; cursor: pointer;
+  transition: transform 150ms var(--ease-out), opacity 150ms ease;
+}
+.vh-btn.pri { background: var(--accent); color: #fff; }
+.vh-btn.sq { flex: none; width: 46px; }
+.vh-btn svg.i { width: 18px; height: 18px; stroke-width: 2; }
+.vh-btn:active { transform: scale(.97); }
+.vh-btn:disabled { opacity: .4; cursor: default; transform: none; }

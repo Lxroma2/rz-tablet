@@ -1,0 +1,135 @@
+/* ===================================================================
+   Verrouillage
+   Ecran verrouille, ecran de code, Face ID.
+   =================================================================== */
+
+/* ===================================================================
+   Ecran de verrouillage (iOS)
+   =================================================================== */
+.statusbar { position: relative; z-index: 41; }
+.screen.locked .statusbar { background: transparent; }
+.screen.locked .status-left { visibility: hidden; }   /* l'heure est deja en grand */
+
+.lock { position: absolute; inset: 0; z-index: 40; overflow: hidden; isolation: isolate; }
+.lock.leaving { opacity: 0; pointer-events: none; transition: opacity 320ms ease; }
+
+/* --- ecran verrouille : fond d'ecran net, glisse vers le haut --- */
+.lk-ls {
+  position: absolute; inset: 0; z-index: 1; background: var(--wall, #000);
+  touch-action: none; cursor: grab; will-change: transform;
+}
+.lk-ls::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .18), transparent 45%, rgba(0, 0, 0, .14)); pointer-events: none; }
+.lk-ls:active { cursor: grabbing; }
+.lock.flow .lk-ls { display: none; }
+
+.lk-glyph { position: absolute; top: 46px; transition: opacity 200ms ease; left: 50%; width: 20px; height: 20px; margin-left: -10px; color: #fff; }
+.lk-glyph svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.lk-padlock .body { fill: currentColor; }
+.lk-padlock .shackle { fill: none; stroke: currentColor; stroke-width: 2.3; stroke-linecap: round; transition: transform 300ms var(--ease-out); }
+.lk-glyph.open .shackle { transform: translateY(-3.2px); }
+.lk-glyph svg.lk-faceid { inset: -3px; width: auto; height: auto; }
+.lk-faceid { fill: none; stroke: currentColor; stroke-width: 4.2; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+.lk-glyph.scan .lk-padlock { opacity: 0; }
+.lk-glyph.scan .lk-faceid { opacity: 1; animation: lkPulse 700ms ease-in-out infinite alternate; }
+@keyframes lkPulse { from { opacity: .45; transform: scale(.94); } }
+.lk-glyph.shake { animation: lkShake 440ms var(--ease-out); }
+
+.lk-head { position: relative; text-align: center; padding-top: 76px; pointer-events: none; }
+.lk-date { font-size: 21px; font-weight: 600; letter-spacing: .005em; color: rgba(255, 255, 255, .9); }
+.lk-time {
+  margin-top: -4px; font-family: "SF Pro Display", -apple-system, "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  font-size: 132px; font-weight: 700; line-height: 1; letter-spacing: -.025em;
+  background: linear-gradient(180deg, #fff 30%, rgba(255, 255, 255, .78));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 6px 26px rgba(0, 0, 0, .16));
+}
+
+.lk-round {
+  position: absolute; right: 26px; bottom: 22px; width: 46px; height: 46px; border: none; border-radius: 50%;
+  display: grid; place-items: center; color: #fff; cursor: pointer;
+  background: var(--glass-bg); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); box-shadow: var(--glass-edge);
+  transition: transform 160ms var(--ease-out), background-color 160ms ease;
+}
+.lk-round svg.i { width: 20px; height: 20px; stroke-width: 2; }
+.lk-round:active { transform: scale(.92); }
+
+.lk-swipe {
+  position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); padding: 10px 40px 9px; border: none; background: none;
+  display: flex; flex-direction: column; align-items: center; gap: 12px; color: rgba(255, 255, 255, .88); cursor: pointer;
+  font-size: 14px; font-weight: 500; letter-spacing: .01em;
+}
+.lk-bar { width: 140px; height: 5px; border-radius: 3px; background: #fff; }
+
+/* --- ecran de code : fond floute et assombri --- */
+.lk-pc { position: absolute; inset: 0; z-index: 0; display: flex; flex-direction: column; overflow: hidden; }
+.lk-pc::before { content: ""; position: absolute; inset: -60px; background: var(--wall, #000); filter: blur(34px) saturate(1.5); }
+.lk-pc::after { content: ""; position: absolute; inset: 0; background: rgba(8, 8, 16, .38); }
+.lock.face-ok .lk-pc { visibility: hidden; }
+.lock[data-stage=ls] .lk-pc { pointer-events: none; }
+.lock.flow .lk-pc { animation: lkFade 260ms ease; }
+@keyframes lkFade { from { opacity: 0; } }
+
+.lk-pc-in {
+  position: relative; z-index: 1; flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding-top: 26px; will-change: transform, opacity;
+}
+.lk-title { font-size: 20px; font-weight: 500; letter-spacing: .01em; min-height: 25px; }
+.lk-dots { display: flex; gap: 20px; margin-top: 18px; }
+.lk-dots i { width: 13px; height: 13px; border-radius: 50%; box-shadow: inset 0 0 0 1.4px #fff; transition: background-color 90ms ease; }
+.lk-dots i.on { background: #fff; }
+.lk-dots.shake { animation: lkShake 440ms var(--ease-out); }
+@keyframes lkShake { 14% { transform: translateX(-12px); } 32% { transform: translateX(10px); } 50% { transform: translateX(-7px); } 68% { transform: translateX(4px); } 86% { transform: translateX(-1px); } }
+.lk-msg { min-height: 17px; margin: 10px 0 18px; font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, .85); text-align: center; }
+
+.pad { display: grid; grid-template-columns: repeat(3, 76px); gap: 16px 26px; }
+.pad .key {
+  width: 76px; height: 76px; border: none; border-radius: 50%; padding: 0; cursor: pointer; color: #fff;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(255, 255, 255, .15);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 0 0 1px rgba(255, 255, 255, .07);
+  transition: background-color 420ms ease;
+}
+.pad .key .d { font-family: "SF Pro Display", -apple-system, "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif; font-size: 35px; font-weight: 300; line-height: 1; }
+.pad .key .l { height: 11px; margin-top: 2px; font-size: 9.5px; font-weight: 700; letter-spacing: .2em; padding-left: .2em; line-height: 11px; }
+.pad .key:active, .pad .key.lit { background: rgba(255, 255, 255, .55); transition-duration: 0ms; }
+.pad .key.blank { visibility: hidden; }
+
+.lk-alt {
+  position: absolute; z-index: 1; right: 30px; bottom: 22px; padding: 8px 6px; border: none; background: none;
+  color: #fff; font-size: 16px; font-weight: 500; cursor: pointer; transition: opacity 150ms ease;
+}
+.lk-alt:active { opacity: .5; }
+
+/* fenetre reduite */
+.lock.short .lk-time { font-size: 96px; }
+.lock.short .lk-head { padding-top: 72px; }
+.lock.scanning .lk-glyph { opacity: 0; }
+.lock.short .lk-glyph { top: 38px; }
+.lock.short .pad { grid-template-columns: repeat(3, 60px); gap: 10px 22px; }
+.lock.short .pad .key { width: 60px; height: 60px; }
+.lock.short .pad .key .d { font-size: 28px; }
+.lock.short .pad .key .l { font-size: 8px; height: 9px; line-height: 9px; }
+.lock.short .lk-msg { margin: 6px 0 10px; }
+.lock.short .lk-dots { margin-top: 12px; }
+
+/* apercu d'une notification, tablette rangee : seul le haut de l'ecran verrouille depasse */
+.lock.preview .lk-pc, .lock.preview .lk-notifs, .lock.preview .lk-round, .lock.preview .lk-swipe { visibility: hidden; }
+.lock.preview .lk-head { padding-top: 98px; }
+.lock.preview .lk-time { font-size: 84px; }
+
+/* deverrouillage : le bureau arrive en zoom */
+.screen.unlocking .view.active { animation: lkHomeIn 560ms var(--ease-drawer) both; }
+@keyframes lkHomeIn { from { opacity: 0; transform: scale(1.08); } }
+
+/* Reglages > Verrouillage */
+.c-red { background: linear-gradient(160deg, #ff6b60, #e0362b); }
+.lk-opt .chk { width: 20px; height: 20px; color: var(--accent); stroke-width: 2.4; visibility: hidden; }
+.lk-opt.on .chk { visibility: visible; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lk-glyph.shake, .lk-dots.shake, .lk-glyph.scan .lk-faceid { animation: none; }
+  .screen.unlocking .view.active { animation: lkFade 300ms ease both; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .lk-pc::after { background: rgba(8, 8, 16, .7); }
+}

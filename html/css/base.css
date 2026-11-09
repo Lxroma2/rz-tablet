@@ -1,0 +1,112 @@
+/* ===================================================================
+   Fondations
+   Couleurs, arrondis, matiere "verre", fenetre, barre d'etat, boutons, barre du bas.
+   =================================================================== */
+
+/* ===================================================================
+   rz-tablet : style "iOS 26" (Liquid Glass, mode sombre)
+   Principes : surfaces en verre depoli (flou + reflet), grands arrondis concentriques
+   (tous regles par les variables --r-*), grands titres, capsules, retour au toucher
+   sur tout ce qui se presse, survol reserve a la souris, mouvement reduit respecte.
+   =================================================================== */
+
+:root {
+  --bg: #000;
+  --s1: #1c1c1e;
+  --s2: #2c2c2e;
+  --s3: #3a3a3c;
+  --bar: #000;
+  --line: rgba(255, 255, 255, .08);
+  --line-strong: rgba(255, 255, 255, .16);
+  --text: #fff;
+  --muted: rgba(235, 235, 245, .6);
+  --accent: #0a84ff;
+  --danger: #ff453a;
+  --ok: #30d158;
+
+  /* arrondis : change ici pour durcir ou adoucir toute l'interface */
+  --r-screen: 30px;
+  --r-group: 20px;
+  --r-ctl: 14px;
+  --r-tile: 9px;
+  --r-icon: 17px;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --glass-bg: linear-gradient(180deg, rgba(255, 255, 255, .17), rgba(255, 255, 255, .07));
+  --glass-blur: blur(22px) saturate(180%);
+  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, .38), inset 0 -1px 0 rgba(255, 255, 255, .06), inset 0 0 0 1px rgba(255, 255, 255, .1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden; background: transparent;
+  font-family: "SF Pro Text", -apple-system, "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif; color: var(--text);
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+ 
+.hidden { display: none !important; }
+
+button { font: inherit; color: inherit; }
+svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex: none; display: block; }
+
+/* ---------- Liquid Glass : meme matiere partout ---------- */
+.dock, .hw, .wg, .st-back, .sv-tabbar, .seg, .sv-icbtn, .sv-composer .sv-input, .navbar .nb, .loading, .blocked, .sv-add {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-edge), 0 8px 24px rgba(0, 0, 0, .28);
+}
+
+/* ---------- Fenetre ---------- */
+#tablet { position: absolute; inset: 0; transition: opacity 200ms var(--ease-out); }
+
+.screen {
+  position: absolute; left: 0; top: 0; width: 1000px; height: 640px; min-width: 520px; min-height: 380px;
+  background: var(--bg); border: 8px solid #050507; border-radius: var(--r-screen); overflow: hidden;
+  box-shadow: 0 0 0 1.5px #34343a, 0 30px 80px rgba(0, 0, 0, .7);
+  display: flex; flex-direction: column; transform-origin: 50% 100%;
+}
+.screen.in { animation: screenIn 220ms var(--ease-out); }
+@keyframes screenIn { from { opacity: 0; transform: translateY(8px) scale(.98); } }
+
+/* barre d'etat : transparente sur l'accueil, pleine dans les apps */
+.statusbar {
+  cursor: move; display: flex; align-items: center; justify-content: space-between; flex: none;
+  padding: 0 22px; height: 36px; font-size: 14px; font-weight: 600; background: var(--bg);
+  font-variant-numeric: tabular-nums; transition: background-color 200ms ease;
+}
+.screen[data-view=home] .statusbar { background: transparent; }
+.status-left { display: flex; align-items: baseline; gap: 10px; }
+#sdate { font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, .75); text-transform: capitalize; }
+.statusbar button { background: none; border: none; color: rgba(255, 255, 255, .6); cursor: pointer; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; }
+.status-right { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.status-right .wifi { display: flex; align-items: center; gap: 8px; }
+.status-right .wifi svg.i { width: 17px; height: 17px; }
+.status-right .wifi svg.bat { width: 26px; height: 13px; stroke-width: 1.4; }
+.dbg { display: none !important; }
+
+.view { display: none; flex: 1; min-height: 0; flex-direction: column; }
+.view.active { display: flex; }
+#browser { background: var(--bg); }
+
+/* ---------- Boutons presses : retour immediat ---------- */
+.app, .navbar button, .toolbar button, .statusbar button, .tab, .bm, .chip .x, .blocked button, .hw, .sv-add, .sv-icbtn, .st-back, .seg button, .sv-tabbar button {
+  transition: transform 150ms var(--ease-out), background-color 150ms ease, color 150ms ease, opacity 150ms ease, box-shadow 150ms ease;
+}
+.app:active:not(.disabled), .navbar button:active, .toolbar button:active:not(:disabled), .statusbar button:active,
+.tab:active, .bm:active, .blocked button:active, .hw:active, .sv-add:active, .sv-icbtn:active, .st-back:active { transform: scale(.95); }
+
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 10px; }
+
+/* ---------- Barre du bas ---------- */
+.navbar { display: flex; align-items: center; justify-content: space-between; flex: none; height: 46px; padding: 0 16px; background: var(--bg); transition: background-color 200ms ease; }
+.screen[data-view=home] .navbar { background: transparent; }
+.navbar button { background: none; border: none; color: rgba(255, 255, 255, .8); cursor: pointer; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; }
+.navbar button#n-home { width: 160px; height: 30px; border-radius: 15px; }
+.navbar .pill { display: block; width: 130px; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, .55); transition: background-color 150ms ease, width 200ms var(--ease-out); }
+.navbar button#n-home:active .pill { width: 104px; }
+.navbar button#n-back, .navbar button#n-close { background: var(--glass-bg); box-shadow: var(--glass-edge); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); }

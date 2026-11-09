@@ -1,0 +1,56 @@
+/* ===================================================================
+   Recherche (facon Spotlight)
+   Champ en haut, resultats groupes en dessous, ligne choisie en bleu.
+   =================================================================== */
+.sp {
+  position: absolute; inset: 0; z-index: 43; display: flex; justify-content: center; align-items: flex-start; padding: 60px 24px 24px;
+  background: rgba(8, 8, 14, .38); -webkit-backdrop-filter: blur(24px) saturate(140%); backdrop-filter: blur(24px) saturate(140%);
+  opacity: 0; transition: opacity 200ms ease;
+}
+.sp.open { opacity: 1; }
+.sp-box { width: min(600px, 100%); max-height: 100%; display: flex; flex-direction: column; gap: 10px; transform: translateY(-16px) scale(.98); transition: transform 320ms cubic-bezier(.3, 1.15, .5, 1); }
+.sp.open .sp-box { transform: none; }
+
+.sp-field {
+  flex: none; display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 14px; border-radius: 16px;
+  background: rgba(46, 46, 52, .82); box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .18), 0 10px 30px rgba(0, 0, 0, .35);
+}
+.sp-field > svg.i { width: 20px; height: 20px; flex: none; color: rgba(235, 235, 245, .6); }
+.sp-field input { flex: 1; min-width: 0; height: 100%; border: none; outline: none; background: none; color: #fff; font: inherit; font-size: 19px; user-select: text; -webkit-user-select: text; }
+.sp-field input::placeholder { color: rgba(235, 235, 245, .45); }
+.sp-field input::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+.sp-x { width: 22px; height: 22px; flex: none; border: none; border-radius: 50%; display: grid; place-items: center; background: rgba(235, 235, 245, .3); color: #1c1c1e; cursor: pointer; }
+.sp-x svg.i { width: 11px; height: 11px; stroke-width: 3.2; }
+
+.sp-res {
+  min-height: 0; overflow-y: auto; padding: 4px 8px 8px; border-radius: 18px; scrollbar-width: thin;
+  background: rgba(36, 36, 42, .84); box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .14), 0 10px 30px rgba(0, 0, 0, .35);
+}
+.sp-res:empty { display: none; }
+.sp-label { padding: 9px 8px 4px; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: rgba(235, 235, 245, .55); }
+
+.sp-row { width: 100%; display: flex; align-items: center; gap: 12px; padding: 7px 8px; border: none; border-radius: 12px; background: none; color: #fff; font: inherit; text-align: left; cursor: pointer; }
+.sp-row .grow { flex: 1; min-width: 0; }
+.sp-t { display: block; font-size: 15px; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-t b { font-weight: 700; }
+.sp-row small { display: block; margin-top: 1px; font-size: 12.5px; color: rgba(235, 235, 245, .6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-calc { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.sp-hint { flex: none; font-size: 12px; color: rgba(235, 235, 245, .5); }
+.sp-ic { width: 32px; height: 32px; flex: none; border-radius: 8px; display: grid; place-items: center; color: #fff; }
+.sp-ic svg.i { width: 18px; height: 18px; }
+.sp-row.sel { background: #0a84ff; }
+.sp-row.sel small, .sp-row.sel .sp-hint { color: rgba(255, 255, 255, .8); }
+
+.sp-apps { display: flex; flex-wrap: wrap; gap: 4px; padding: 2px 0 4px; }
+.sp-app { width: 88px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 4px 7px; border: none; border-radius: 14px; background: none; color: #fff; font: inherit; font-size: 12px; cursor: pointer; }
+.sp-app .icon { width: 52px; height: 52px; }
+.sp-app span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sp-app.sel { background: rgba(255, 255, 255, .16); }
+.sp-none { padding: 18px 10px; text-align: center; font-size: 14px; color: rgba(235, 235, 245, .6); }
+
+@media (hover: hover) {
+  .sp-row:hover:not(.sel), .sp-app:hover:not(.sel) { background: rgba(255, 255, 255, .08); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sp-box { transition: none; transform: none; }
+}

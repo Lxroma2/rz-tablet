@@ -1,0 +1,107 @@
+/* ===================================================================
+   Carte
+   Atlas en plein ecran, boutons en verre a droite, carte d'information en bas.
+   =================================================================== */
+#maps { position: relative; background: #12a9cf; overflow: hidden; }
+.mp-map { position: absolute; inset: 0; background: #12a9cf; }
+.mp-map.leaflet-container { background: #12a9cf; font: inherit; outline: none; }
+.mp-map .leaflet-tile { image-rendering: auto; }
+
+/* boutons */
+.mp-ctl { position: absolute; z-index: 500; right: 16px; top: 16px; display: flex; flex-direction: column; gap: 10px; }
+.mp-zoom { display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; }
+.mp-btn {
+  width: 44px; height: 44px; border: none; display: grid; place-items: center; color: #1c1c1e; cursor: pointer;
+  background: rgba(255, 255, 255, .86); -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .22); transition: transform 150ms var(--ease-out), color 150ms ease;
+}
+.mp-btn svg.i { width: 20px; height: 20px; stroke-width: 2.1; }
+#mp-me { border-radius: 16px; }
+#mp-me.on { color: var(--accent); }
+#mp-me.on svg.i { fill: currentColor; }
+.mp-zoom .mp-btn { box-shadow: none; }
+.mp-zoom { box-shadow: 0 4px 14px rgba(0, 0, 0, .22); }
+.mp-zoom .mp-btn + .mp-btn { box-shadow: inset 0 1px 0 rgba(0, 0, 0, .1); }
+.mp-btn:active { transform: scale(.92); }
+
+/* retour vers l'app d'origine (Services) */
+.mp-ret {
+  position: absolute; z-index: 500; left: 16px; top: 16px; height: 44px; padding: 0 16px 0 8px; border: none; border-radius: 999px;
+  display: flex; align-items: center; gap: 2px; color: var(--accent); font-size: 16px; font-weight: 600; cursor: pointer;
+  background: rgba(255, 255, 255, .86); -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .22); transition: transform 150ms var(--ease-out);
+}
+.mp-ret svg.i { width: 22px; height: 22px; stroke-width: 2.4; }
+.mp-ret:active { transform: scale(.96); }
+
+/* ma position : point bleu + cone du cap */
+.mp-me { overflow: visible; }
+.mp-dot { position: absolute; inset: 3px; border-radius: 50%; background: #0a84ff; border: 3px solid #fff; box-shadow: 0 1px 5px rgba(0, 0, 0, .45); }
+.mp-cone {
+  position: absolute; left: -24px; top: -24px; width: 72px; height: 72px; border-radius: 50%;
+  background: conic-gradient(from -32deg, rgba(10, 132, 255, .55) 0deg 64deg, transparent 64deg 360deg);
+  -webkit-mask: radial-gradient(circle, #000 0 22%, rgba(0, 0, 0, .9) 30%, transparent 70%); mask: radial-gradient(circle, #000 0 22%, rgba(0, 0, 0, .9) 30%, transparent 70%);
+  transition: transform 300ms linear;
+}
+
+/* epingle (point touche) et point GPS */
+.mp-pin i, .mp-wp i {
+  position: absolute; left: 50%; top: 0; width: 24px; height: 24px; margin-left: -12px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+  background: #ff3b30; border: 3px solid #fff; box-shadow: -1px 2px 6px rgba(0, 0, 0, .4);
+}
+.mp-wp i { width: 28px; height: 28px; margin-left: -14px; background: #bf5af2; }
+.mp-pin i, .mp-wp i { animation: mpDrop 360ms cubic-bezier(.3, 1.3, .5, 1) both; }
+@keyframes mpDrop { from { opacity: 0; transform: translateY(-22px) rotate(-45deg); } }
+
+/* entreprises */
+.mp-svc-in {
+  width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  background: #636366; border: 2.5px solid #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, .35); color: #fff;
+  transition: transform 150ms var(--ease-out);
+}
+.mp-svc-in b { font-size: 12px; font-weight: 700; letter-spacing: -.02em; }
+.mp-svc-in.open { background: #30d158; }
+.mp-svc:hover .mp-svc-in { transform: scale(1.08); }
+
+/* vehicules : bleu = les miens, orange = entreprise, pale = derniere position connue */
+.mp-veh-in {
+  width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; color: #fff;
+  background: #0a84ff; border: 2.5px solid #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, .35);
+  transition: transform 150ms var(--ease-out), box-shadow 150ms ease;
+}
+.mp-veh-in.job { background: #ff9f0a; }
+.mp-veh-in.old { opacity: .62; }
+.mp-veh-in svg { width: 18px; height: 18px; }
+.mp-veh:hover .mp-veh-in { transform: scale(1.08); }
+.mp-veh.on .mp-veh-in { transform: scale(1.2); box-shadow: 0 0 0 5px rgba(255, 255, 255, .45), 0 3px 10px rgba(0, 0, 0, .4); }
+
+/* carte d'information */
+.mp-card {
+  position: absolute; z-index: 500; left: 50%; bottom: 16px; width: min(540px, calc(100% - 32px));
+  display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 18px; border-radius: 22px;
+  background: rgba(28, 28, 30, .84); -webkit-backdrop-filter: blur(24px) saturate(170%); backdrop-filter: blur(24px) saturate(170%);
+  box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .14), 0 10px 30px rgba(0, 0, 0, .35);
+  transform: translate(-50%, 14px); opacity: 0; transition: transform 260ms var(--ease-drawer), opacity 180ms ease;
+}
+.mp-card.in { transform: translate(-50%, 0); opacity: 1; }
+.mp-card-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.mp-card-tx b { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mp-card-tx > span { font-size: 13.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#mp-card-s:not(:empty) + .mp-card-d::before { content: " · "; }
+.mp-gps {
+  flex: none; height: 38px; padding: 0 18px; border: none; border-radius: 999px; background: var(--accent); color: #fff;
+  font-size: 15px; font-weight: 600; cursor: pointer; transition: transform 150ms var(--ease-out), background-color 150ms ease;
+}
+.mp-gps.off { background: rgba(255, 69, 58, .16); color: var(--danger); }
+.mp-gps:active { transform: scale(.96); }
+.mp-x {
+  flex: none; width: 30px; height: 30px; border: none; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  background: rgba(118, 118, 128, .3); color: rgba(235, 235, 245, .7); transition: transform 150ms var(--ease-out);
+}
+.mp-x svg.i { width: 14px; height: 14px; stroke-width: 2.6; }
+.mp-x:active { transform: scale(.9); }
+
+@media (prefers-reduced-motion: reduce) {
+  .mp-pin i, .mp-wp i { animation: none; }
+  .mp-card { transition: opacity 180ms ease; transform: translate(-50%, 0); }
+}

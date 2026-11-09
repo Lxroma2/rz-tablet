@@ -1,0 +1,16 @@
+# Python (banc d'essai)
+__pycache__/
+*.pyc
+
+# Fichiers temporaires des captures et tests
+html/_*.html
+
+# Fond perso du banc d'essai
+dev/fond.jpg
+
+# Systeme et editeurs
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/

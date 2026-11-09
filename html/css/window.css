@@ -1,0 +1,31 @@
+/* ===================================================================
+   Fenetre
+   Poignees de redimensionnement, petites fenetres, barres de defilement.
+   =================================================================== */
+
+/* ---------- Poignees de redimensionnement ---------- */
+.rs { position: absolute; z-index: 20; }
+.rs-r { right: 0; top: 0; bottom: 0; width: 8px; cursor: ew-resize; }
+.rs-b { left: 0; right: 0; bottom: 0; height: 8px; cursor: ns-resize; }
+.rs-l { left: 0; top: 0; bottom: 0; width: 8px; cursor: ew-resize; }
+.rs-t { left: 0; right: 0; top: 0; height: 6px; cursor: ns-resize; }
+.rs-br { right: 0; bottom: 0; width: 18px; height: 18px; cursor: nwse-resize; }
+.rs-bl { left: 0; bottom: 0; width: 18px; height: 18px; cursor: nesw-resize; }
+.rs-tr { right: 0; top: 0; width: 18px; height: 18px; cursor: nesw-resize; }
+.rs-tl { left: 0; top: 0; width: 18px; height: 18px; cursor: nwse-resize; }
+body.dragging iframe { pointer-events: none; }
+body.dragging, body.dragging * { user-select: none; }
+
+/* ---------- Petites fenetres : on garde l'essentiel ---------- */
+.screen.compact .toolbar button#b-zoomout, .screen.compact .toolbar button#b-zoomin { display: none; }
+.screen.compact .toolbar button#b-home { display: none; }
+.screen.compact .home-body { flex-direction: column; gap: 14px; }
+.screen.compact .home-widgets { width: 100%; }
+.screen.compact .hw { display: none; }
+.screen.compact #sdate { display: none; }
+
+/* ---------- Barres de defilement discretes ---------- */
+::-webkit-scrollbar { width: 8px; height: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .14); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, .24); }
+::-webkit-scrollbar-track { background: transparent; }

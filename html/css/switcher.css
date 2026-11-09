@@ -1,0 +1,45 @@
+/* ===================================================================
+   Selecteur d'apps
+   Rangee de cartes (instantane de chaque app) sur le fond floute.
+   =================================================================== */
+.asw {
+  position: absolute; inset: 0; z-index: 43; display: flex; flex-direction: column; justify-content: center;
+  overflow: hidden; background: #000; opacity: 0; transition: opacity 220ms ease;
+}
+/* fond d'ecran floute et assombri derriere les cartes */
+.asw::before { content: ""; position: absolute; inset: -40px; z-index: -1; background: var(--wall, #000); filter: blur(28px) brightness(.5) saturate(1.2); }
+.asw.open { opacity: 1; }
+.asw-row {
+  display: flex; align-items: center; gap: 28px; overflow-x: auto; overflow-y: hidden; padding: 40px 48px 56px; scrollbar-width: none;
+  transform: scale(1.08); transition: transform 340ms cubic-bezier(.3, 1.1, .5, 1);
+}
+.asw.open .asw-row { transform: none; }
+.asw-row::-webkit-scrollbar { display: none; }
+.asw-card { flex: none; display: flex; flex-direction: column; gap: 9px; cursor: pointer; touch-action: none; }
+.asw-card.dragging { cursor: grabbing; }
+.asw-head { display: flex; align-items: center; gap: 8px; padding-left: 2px; font-size: 13px; font-weight: 600; color: #fff; text-shadow: 0 1px 6px rgba(0, 0, 0, .4); }
+.asw-head .icon.ic-sm { width: 26px; height: 26px; border-radius: 7px; font-size: 11px; }
+.asw-frame {
+  position: relative; overflow: hidden; border-radius: 18px; background: var(--wall, #000);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .45), 0 0 0 .5px rgba(255, 255, 255, .18);
+  transition: transform 220ms var(--ease-out);
+}
+.asw-inner { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; transform-origin: 0 0; pointer-events: none; }
+.asw-inner > .asw-snap { display: flex !important; flex: 1; min-height: 0; }
+.asw-snap, .asw-snap * { animation: none !important; transition: none !important; }
+.asw-hole { width: 100%; height: 100%; background: rgba(0, 0, 0, .25); }
+.asw-synth {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px;
+  background: rgba(0, 0, 0, .5); color: rgba(255, 255, 255, .85); font-size: 14px; font-weight: 500; text-align: center;
+}
+.asw-synth .icon { width: 64px; height: 64px; }
+.asw-synth span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.asw-empty { text-align: center; font-size: 17px; font-weight: 500; color: rgba(255, 255, 255, .7); }
+.asw-hint { position: absolute; left: 0; right: 0; bottom: 22px; text-align: center; font-size: 12.5px; color: rgba(255, 255, 255, .55); pointer-events: none; }
+
+@media (hover: hover) {
+  .asw-card:hover .asw-frame { transform: translateY(-4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .asw-row { transform: none; transition: none; }
+}
