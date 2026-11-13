@@ -11,7 +11,7 @@ Config.ItemName     = 'tablet'
 Config.OpenKey      = 'F3'
 
 -- Commande de debug qui ouvre la tablette sans objet ni verrou (laisser nil pour la desactiver)
-Config.DebugCommand = nil -- ex: 'tablet'
+Config.DebugCommand = 'tablet' -- commande dev (ouvre la tablette sans objet) ; 'tabletnotif' teste notification + son. Remettre nil en production
 
 -- Objet tenu en main et animation
 Config.Prop         = {
@@ -44,6 +44,7 @@ Config.Notify       = {
     peek = true,     -- false : pas d'apercu, la notification attend dans la tablette
     peekTime = 5000, -- duree de l'apercu (ms)
     sound = true,
+    volume = 0.6,    -- volume du son de notification (0.0 a 1.0), fichier html/sound/notification.ogg
 }
 
 -- =====================================================================
@@ -52,6 +53,8 @@ Config.Notify       = {
 
 -- Apps web installables par les joueurs. Elles s'ouvrent en plein ecran comme de vraies apps,
 -- donc le site doit etre autorise dans Config.Browser.allowedHosts.
+-- Le staff (Config.Services.staffGroups) peut aussi en ajouter en jeu : Reglages > Administration.
+-- Celles-ci sont en base (rz_tablet_apps) et leur site est autorise automatiquement.
 -- id    = identifiant unique (minuscules, chiffres, - et _)
 -- color = couleur du degrade de l'icone
 -- icon  = pictogramme Phosphor (nom sans suffixe, ex. 'house-line', 'car', 'shopping-cart') : liste sur https://phosphoricons.com
@@ -166,6 +169,7 @@ Config.AirDrop      = {
 -- ils restent blancs en mode Frame. autoDetect les bascule tout seuls en mode Rendu.
 Config.Browser      = {
     -- Liste blanche : si true, seuls les sites de allowedHosts (et leurs sous-domaines) peuvent etre ouverts.
+    -- Le staff peut en autoriser d'autres en jeu (Reglages > Administration, table rz_tablet_sites).
     restrictToAllowed = true,
     allowedHosts = {
     },
@@ -194,6 +198,7 @@ Config.Dui          = {
 -- Une entreprise est "ouverte" quand au moins un joueur de ce job est en service.
 Config.Services     = {
     -- Groupes ESX autorises a ajouter / modifier / supprimer des entreprises (le bouton +)
+    -- et a ouvrir Reglages > Administration (sites autorises, apps web)
     staffGroups = { owner = true, admin = true },
     messageCooldown = 4000,      -- ms entre deux messages d'un meme joueur
     messageMaxLength = 300,

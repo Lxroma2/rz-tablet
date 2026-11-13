@@ -30,10 +30,31 @@ end
 
 function RzIsOpen() return isOpen end
 
+-- Echap ferme la tablette, mais la meme touche ne doit pas ouvrir le menu pause (la carte) juste apres :
+-- quand la tablette rend le clavier au jeu, Echap est souvent encore enfonce. On bloque la pause
+-- pendant 500 ms apres la fermeture, et tant que la touche reste enfoncee.
+local guardUntil, guardRunning = 0, false
+local function guardPause()
+    guardUntil = GetGameTimer() + 500
+    if guardRunning then return end
+    guardRunning = true
+    CreateThread(function()
+        while GetGameTimer() < guardUntil or IsDisabledControlPressed(0, 200) or IsDisabledControlPressed(0, 199) do
+            DisableControlAction(0, 199, true)
+            DisableControlAction(0, 200, true)
+            DisableControlAction(0, 202, true)
+            if IsPauseMenuActive() then SetPauseMenuActive(false) end
+            Wait(0)
+        end
+        guardRunning = false
+    end)
+end
+
 local function closeTablet()
     if not isOpen then return end
     isOpen = false
     typing = false
+    guardPause()
     RzDui.destroy()
     SetNuiFocusKeepInput(false)
     SetNuiFocus(false, false)
@@ -52,7 +73,8 @@ RegisterNetEvent('rz-tablet:open', function(_, info)
     -- ox_inventory passe l'emplacement de l'objet utilise : le verrou est lie a cette tablette
     RzSlot = type(info) == 'table' and tonumber(info.slot) or nil
 
-    ESX.TriggerServerCallback('rz-tablet:getConfig', function(browser)
+    ESX.TriggerServerCallback('rz-tablet:getConfig', function(conf)
+        conf = type(conf) == 'table' and conf or {}
         ESX.TriggerServerCallback('rz-tablet:lock:state', function(lock)
             isOpen = true
             loadDict(Config.Anim.dict)
@@ -63,14 +85,31 @@ RegisterNetEvent('rz-tablet:open', function(_, info)
             SetNuiFocusKeepInput(RzSettings.allowWalk)
             SendNUIMessage({
                 action = 'open',
-                browser = browser,
+                browser = conf.browser,
                 defaults = { walkOpacity = Config.WalkOpacity, allowWalk = Config.AllowWalk },
                 lock = lock,
-                store = Config.Store,
+                store = conf.store or Config.Store,
+                staff = conf.staff == true,
                 icons = Config.AppIcons,
             })
         end, RzSlot)
     end)
+end)
+
+-- Un admin a change les sites autorises ou les apps : la tablette se met a jour tout de suite
+RegisterNetEvent('rz-tablet:cfgUpdate', function(conf)
+    if type(conf) ~= 'table' then return end
+    SendNUIMessage({ action = 'cfg', browser = conf.browser, store = conf.store })
+end)
+
+-- Page Administration des Reglages (sites autorises, apps web) : les droits sont verifies par le serveur
+local ADMIN = { state = true, addSite = true, delSite = true, saveApp = true, delApp = true }
+RegisterNUICallback('admin', function(data, cb)
+    local act = type(data) == 'table' and data.act
+    if not act or not ADMIN[act] then return cb({ ok = false }) end
+    ESX.TriggerServerCallback('rz-tablet:admin:' .. act, function(res)
+        cb(res or { ok = false })
+    end, data.payload)
 end)
 
 -- Touche d'ouverture : ouvre la premiere tablette de l'inventaire (meme verrou que l'objet)
@@ -117,8 +156,11 @@ RegisterNUICallback('close', function(_, cb)
 end)
 
 -- Le joueur tape dans la tablette (barre d'adresse ou page) : on coupe le clavier du jeu
+local typingEnded = 0
 RegisterNUICallback('typing', function(data, cb)
+    local was = typing
     typing = data and data.state == true
+    if was and not typing then typingEnded = GetGameTimer() end
     if isOpen then SetNuiFocusKeepInput(RzSettings.allowWalk and not typing) end
     cb('ok')
 end)
@@ -144,9 +186,10 @@ CreateThread(function()
             DisableControlAction(0, 202, true)
 
             -- Echap : ferme seulement la tablette. Si le jeu a quand meme ouvert son menu pause
-            -- (la carte), on le referme tout de suite.
+            -- (la carte), on le referme tout de suite. Un Echap qui vient de quitter un champ de texte
+            -- ne ferme pas la tablette.
             if IsPauseMenuActive() then SetPauseMenuActive(false) end
-            if not typing and IsDisabledControlJustPressed(0, 200) then closeTablet() end
+            if not typing and GetGameTimer() - typingEnded > 300 and IsDisabledControlJustPressed(0, 200) then closeTablet() end
             Wait(0)
         else
             Wait(250)

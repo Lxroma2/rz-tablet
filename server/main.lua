@@ -1,9 +1,18 @@
 -- L'item 'tablet' est declare dans ox_inventory/data/items.lua
 -- (client.event = 'rz-tablet:open'), plus besoin de SQL ni de RegisterUsableItem.
 
--- Le client demande la config du navigateur a l'ouverture
-ESX.RegisterServerCallback('rz-tablet:getConfig', function(_, cb)
-    cb(Config.Browser)
+-- Staff : groupes ESX de Config.Services.staffGroups, ou acces console (ace 'command')
+function RzIsStaff(src)
+    if IsPlayerAceAllowed(src, 'command') then return true end
+    local xPlayer = ESX.GetPlayerFromId(src)
+    local groups = Config.Services and Config.Services.staffGroups or {}
+    return xPlayer ~= nil and groups[xPlayer.getGroup()] == true
+end
+
+-- Le client demande la config a l'ouverture : navigateur (sites de config.lua + ceux ajoutes en jeu),
+-- apps web (Config.Store + apps ajoutees en jeu) et acces a la page Administration
+ESX.RegisterServerCallback('rz-tablet:getConfig', function(source, cb)
+    cb({ browser = RzBrowserConfig(), store = RzStoreList(), staff = RzIsStaff(source) })
 end)
 
 -- ---------------------------------------------------------------------------
@@ -16,7 +25,7 @@ local cache = {}       -- host -> { t = GetGameTimer(), ok = bool }
 local lastReq = {}     -- source -> GetGameTimer()
 
 -- Refuse les adresses locales / privees (evite d'utiliser le serveur pour sonder le reseau interne)
-local function isPrivateHost(host)
+function RzIsPrivateHost(host)
     if host == 'localhost' or host:find('%.local$') or host:find('%.internal$') then return true end
     if not host:find('%.') then return true end
     if host:find('^%[') or host:find(':') then return true end
@@ -31,14 +40,11 @@ local function isPrivateHost(host)
     return false
 end
 
--- Liste blanche (Config.Browser.allowedHosts) : le host doit etre listé ou en etre un sous-domaine
+-- Liste blanche (Config.Browser.allowedHosts + sites autorises en jeu) : le host doit etre listé
+-- ou en etre un sous-domaine
 local function hostAllowed(host)
     if not Config.Browser.restrictToAllowed then return true end
-    for _, allowed in ipairs(Config.Browser.allowedHosts or {}) do
-        allowed = tostring(allowed):lower()
-        if host == allowed or host:sub(-(#allowed + 1)) == '.' .. allowed then return true end
-    end
-    return false
+    return RzHostCovered(host, RzAllowedHosts())
 end
 
 local function getHeader(headers, name)
@@ -70,7 +76,7 @@ ESX.RegisterServerCallback('rz-tablet:canFrame', function(source, cb, url)
     local host = url:match('^https?://([^/%?#]+)')
     if not host or host:find('@') then return cb(false) end
     host = host:gsub(':%d+$', ''):lower()
-    if isPrivateHost(host) then return cb(false) end
+    if RzIsPrivateHost(host) then return cb(false) end
     if not hostAllowed(host) then return cb(false) end
 
     local c = cache[host]

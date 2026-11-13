@@ -16,7 +16,7 @@ RegisterNetEvent('rz-tablet:ad:incoming', function(req)
     if type(req) ~= 'table' then return end
     SendNUIMessage({ action = 'airdrop', req = req })
     if RzIsOpen() then
-        if not RzSettings.dnd and RzSettings.sound ~= false then PlaySoundFrontend(-1, 'PICK_UP', 'HUD_FRONTEND_DEFAULT_SOUNDSET', false) end
+        if not RzSettings.dnd and RzSettings.sound ~= false then RzPlaySound() end
     else
         -- tablette rangee : la demande attend dans la tablette, une notification previent
         RzNotify({ app = 'system', title = 'AirDrop', body = ('%s veut te partager %s. Sors ta tablette pour répondre.'):format(tostring(req.from), KIND[req.kind] or 'un élément') })

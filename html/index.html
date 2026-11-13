@@ -48,6 +48,7 @@
   <symbol id="ic-briefcase" viewBox="0 0 24 24"><rect x="3.5" y="7.5" width="17" height="12" rx="1.5"/><path d="M9 7.5V5.5h6v2M3.5 13h17"/></symbol>
   <symbol id="ic-inbox" viewBox="0 0 24 24"><path d="M4 13l2-7h12l2 7v5H4z"/><path d="M4 13h5l1 2h4l1-2h5"/></symbol>
   <symbol id="ic-send" viewBox="0 0 24 24"><path d="M21 3L3 10.5l7 3 3 7z"/><path d="M10 13.5L21 3"/></symbol>
+  <symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5.5c0 4.3 2.9 8.1 7 9.5 4.1-1.4 7-5.2 7-9.5V6z"/><path d="m9 12 2.2 2.2L15.5 10"/></symbol>
   <symbol id="ic-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
   <symbol id="ic-bell" viewBox="0 0 24 24"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
   <symbol id="ic-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
@@ -163,6 +164,9 @@
               <button class="st-row st-link" data-go="sp-airdrop"><span class="st-ico c-blue"><svg class="i"><use href="#ic-airdrop"/></svg></span><span class="grow">AirDrop</span><span class="st-val" id="v-airdrop"></span><svg class="i st-chev"><use href="#ic-chev-r"/></svg></button>
               <button class="st-row st-link" data-go="sp-lock"><span class="st-ico c-green"><svg class="i"><use href="#ic-lock"/></svg></span><span class="grow">Verrouillage</span><span class="st-val" id="v-lock"></span><svg class="i st-chev"><use href="#ic-chev-r"/></svg></button>
               <button class="st-row st-link" data-go="sp-tablet"><span class="st-ico c-gray"><svg class="i"><use href="#ic-tablet"/></svg></span><span class="grow">Tablette</span><svg class="i st-chev"><use href="#ic-chev-r"/></svg></button>
+            </div>
+            <div class="st-group hidden" id="st-admin-grp">
+              <button class="st-row st-link" data-go="sp-admin" id="st-admin-row"><span class="st-ico c-red"><svg class="i"><use href="#ic-shield"/></svg></span><span class="grow">Administration</span><span class="st-val">Staff</span><svg class="i st-chev"><use href="#ic-chev-r"/></svg></button>
             </div>
             <div class="st-foot st-about">rz-tablet</div>
           </div>
@@ -314,6 +318,67 @@
           </div>
         </div>
 
+        <div class="st-page" id="sp-admin">
+          <header class="st-head"><button class="st-back" data-back><svg class="i"><use href="#ic-chevron"/></svg>Réglages</button><span class="st-title">Administration</span></header>
+          <div class="st-body">
+            <div class="st-sec">
+              <div class="st-label">Applications</div>
+              <div class="st-group" id="ad-apps"></div>
+              <div class="st-foot" id="ad-apps-msg">Les apps ajoutées ici apparaissent dans App pour tous les joueurs. Celles de config.lua se modifient dans le fichier.</div>
+            </div>
+            <div class="st-sec">
+              <div class="st-label">Sites autorisés</div>
+              <div class="st-group">
+                <div class="st-row col">
+                  <div class="wp-url">
+                    <input id="ad-host" class="sv-input" type="text" maxlength="200" placeholder="exemple.com" spellcheck="false" autocomplete="off" aria-label="Site à autoriser">
+                    <button id="ad-host-add" class="wp-url-btn">Autoriser</button>
+                  </div>
+                </div>
+                <div class="st-row col"><div id="ad-sites" class="chips"></div></div>
+              </div>
+              <div class="st-foot" id="ad-sites-msg"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="st-page" id="sp-app">
+          <header class="st-head"><button class="st-back" data-back><svg class="i"><use href="#ic-chevron"/></svg>Administration</button><span class="st-title" id="ap-title">Nouvelle app</span></header>
+          <div class="st-body">
+            <div class="ap-preview"><span class="ap-icon" id="ap-icon"></span><b id="ap-prev-label">Nom</b></div>
+            <div class="st-sec"><div class="st-label">Nom</div><input type="text" id="ap-label" class="sv-input" maxlength="24" placeholder="Ex. Weazel News" autocomplete="off"></div>
+            <div class="st-sec"><div class="st-label">Sous-titre</div><input type="text" id="ap-subtitle" class="sv-input" maxlength="60" placeholder="Une ligne sous le nom dans App" autocomplete="off"></div>
+            <div class="st-sec"><div class="st-label">Catégorie</div><input type="text" id="ap-category" class="sv-input" maxlength="24" placeholder="App web" autocomplete="off"></div>
+            <div class="st-sec">
+              <div class="st-label">Lien du site</div>
+              <input type="text" id="ap-url" class="sv-input" maxlength="300" placeholder="https://exemple.com/" spellcheck="false" autocomplete="off">
+              <div class="st-foot">Le site est ajouté aux sites autorisés s'il ne l'est pas déjà.</div>
+            </div>
+            <div class="st-sec">
+              <div class="st-label">Image de l'icône</div>
+              <input type="text" id="ap-image" class="sv-input" maxlength="300" placeholder="https://exemple.com/logo.png" spellcheck="false" autocomplete="off">
+              <div class="st-foot" id="ap-image-msg">Lien direct vers une image carrée (https). Sans image : initiales sur la couleur choisie.</div>
+            </div>
+            <div class="st-sec">
+              <div class="st-label">Couleur</div>
+              <div class="st-group"><div class="ap-colors" id="ap-colors"></div></div>
+            </div>
+            <div class="st-sec">
+              <div class="st-label">Pictogramme</div>
+              <input type="text" id="ap-icon-name" class="sv-input" maxlength="48" placeholder="Ex. newspaper (optionnel)" spellcheck="false" autocomplete="off">
+              <div class="st-foot">Nom d'un pictogramme Phosphor, utilisé quand il n'y a pas d'image.</div>
+            </div>
+            <div class="st-sec"><div class="st-label">Description</div><textarea id="ap-desc" class="sv-input ap-desc" maxlength="600" rows="4" placeholder="Affichée sur la fiche de l'app dans App"></textarea></div>
+            <div class="st-sec">
+              <div class="st-group">
+                <button class="st-row st-action" id="ap-save">Enregistrer</button>
+                <button class="st-row st-action danger hidden" id="ap-del">Supprimer l'app</button>
+              </div>
+              <div class="st-foot sv-result err" id="ap-err"></div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -440,7 +505,11 @@
     <!-- Calculatrice -->
     <section id="calculator" class="view">
       <div class="ca-wrap">
-        <div class="ca-screen"><div class="ca-expr" id="ca-expr"></div><div class="ca-disp" id="ca-disp">0</div></div>
+        <div class="ca-screen" id="ca-screen">
+          <button class="ca-mode hidden" id="ca-mode">Scientifique</button>
+          <span class="ca-rad hidden" id="ca-rad">Rad</span>
+          <div class="ca-expr" id="ca-expr"></div><div class="ca-disp" id="ca-disp">0</div>
+        </div>
         <div class="ca-pad" id="ca-pad"></div>
       </div>
     </section>
@@ -635,5 +704,6 @@
 <script src="js/widgets.js"></script>
 <script src="js/switcher.js"></script>
 <script src="js/search.js"></script>
+<script src="js/admin.js"></script>
 </body>
 </html>

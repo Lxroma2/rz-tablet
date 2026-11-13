@@ -13,7 +13,7 @@
   position: absolute; inset: 0; z-index: 2; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain;
   background: var(--bg); box-shadow: -18px 0 40px rgba(0, 0, 0, .5);
   transform: translateX(100%); visibility: hidden;
-  transition: transform 340ms var(--ease-drawer), visibility 0s linear 340ms;
+  transition: transform 340ms var(--ease-drawer), visibility 0s linear 340ms, filter 340ms var(--ease-drawer);
 }
 .st-page.open { transform: none; visibility: visible; transition-delay: 0s; }
 .st-root { z-index: 0; transform: none; visibility: visible; box-shadow: none; transition: transform 340ms var(--ease-drawer); }
@@ -115,3 +115,33 @@ select option { background: #1c1c1e; color: #fff; }
 }
 .wp-url-btn:active { transform: scale(.96); }
 #s-wall-msg.bad { color: var(--danger); }
+
+/* sous-page recouverte par une autre (Administration -> fiche d'une app) */
+.st-page.open.under { transform: translateX(-24%); filter: brightness(.5); }
+
+/* ===================================================================
+   Administration (staff) : apps web et sites autorises
+   =================================================================== */
+.ad-app .grow b { display: block; font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ad-app.fixed { cursor: default; }
+.ad-app.fixed:active { background: none; }
+.ad-tag { flex: none; font-size: 12px; color: var(--muted); background: rgba(120, 120, 128, .24); border-radius: 999px; padding: 3px 10px; }
+.st-group > .ad-app ~ .ad-app::before, .st-group > .ad-add ~ .ad-app::before { left: 70px; }
+.ad-add svg.i { width: 18px; height: 18px; stroke-width: 2.2; }
+.chip.fixed { padding-right: 14px; }
+.chip.fixed small { color: var(--muted); font-size: 11px; }
+#ad-sites-msg.bad, #ad-apps-msg.bad { color: var(--danger); }
+#ad-apps-msg.good, #ad-sites-msg.good { color: var(--ok); }
+
+.ap-preview { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 8px 0 0; }
+.ap-preview .icon { width: 76px; height: 76px; font-size: 28px; }
+.ap-preview b { font-size: 13px; font-weight: 500; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ap-colors { display: flex; flex-wrap: wrap; gap: 12px; padding: 14px 16px; }
+.ap-color {
+  width: 32px; height: 32px; padding: 0; border: none; border-radius: 50%; cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); transition: transform 150ms var(--ease-out), box-shadow 200ms var(--ease-out);
+}
+.ap-color:active { transform: scale(.92); }
+.ap-color.on { box-shadow: 0 0 0 2px var(--s1), 0 0 0 4px var(--accent); }
+.ap-desc { min-height: 96px; line-height: 1.4; }
+#ap-image-msg.bad { color: var(--danger); }

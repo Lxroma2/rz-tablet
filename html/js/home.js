@@ -162,8 +162,9 @@
 
   /* ---------- Element d'icone ---------- */
   // Config.AppIcons passe avant les reglages de l'app (Config.Store pour les apps web, GLYPH pour les integrees)
+  // id peut aussi etre un objet app complet (apercu de la page Administration, pas encore au catalogue)
   function iconEl(id) {
-    const a = byId(id);
+    const a = id && typeof id === 'object' ? id : byId(id);
     const el = h('span', 'icon');
     if (!a) { el.classList.add('i-system'); el.innerHTML = GLYPH.settings; return el; }
     const s = skins[a.id] || {};

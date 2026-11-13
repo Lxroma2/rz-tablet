@@ -22,7 +22,22 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('focusin', (e) => { if (isTextField(e.target) && e.target !== $('url')) setTyping(true); });
 document.addEventListener('focusout', (e) => { if (isTextField(e.target) && e.target !== $('url') && !isTextField(e.relatedTarget)) setTyping(!!(viewHooks[currentView] && viewHooks[currentView].keys)); });
 
-window.RZ = { post, postJson, isFiveM, setTyping, openUrl, openApp, closeApp, showView, registerView, setDnd, setSetting,
+/* ---------- Config envoyee par le serveur (sites autorises, apps web) ----------
+   A l'ouverture, puis a chaque changement fait par un admin (message 'cfg'). */
+let staffMode = false;
+let lastIcons = null;
+function applyCfg(browser, storeList) {
+  if (browser) cfg = Object.assign(cfg, browser);
+  if (Array.isArray(storeList) && window.RZHome) {
+    // une app supprimee par un admin se ferme si elle etait ouverte
+    const before = RZHome.catalog().filter((a) => a.web).map((a) => a.id);
+    RZHome.config(storeList, lastIcons);
+    const after = new Set(RZHome.catalog().filter((a) => a.web).map((a) => a.id));
+    before.forEach((id) => { if (!after.has(id)) closeApp(id); });
+  }
+}
+
+window.RZ = { post, postJson, applyCfg, isStaff: () => staffMode, isFiveM, setTyping, openUrl, openApp, closeApp, showView, registerView, setDnd, setSetting,
   canWalk: () => walkAvailable,
   appMode: () => appMode,
   suspendDui: (on) => { duiHold = !!on; },
@@ -37,11 +52,14 @@ window.addEventListener('message', (e) => {
   const d = e.data || {};
   if (d.action === 'open') {
     if (d.browser) cfg = Object.assign(cfg, d.browser);
+    staffMode = d.staff === true;
+    $('st-admin-grp').classList.toggle('hidden', !staffMode);
     loadSettings(d.defaults);
     bookmarks = (store.get('bookmarks', null) || (cfg.bookmarks || []).map(b => ({ title: b.title, url: b.url }))).filter(b => isAllowed(b.url));
     renderBookmarks();
     zoom = store.get('zoom', null) || cfg.zoom || 0.6; updateZoomLabel(); applyFrameZoom();
     if (window.RZNotif) RZNotif.cancelPeek();
+    lastIcons = d.icons || null;
     if (window.RZHome) RZHome.config(d.store, d.icons);
     $('tablet').classList.remove('hidden');
     initGeo();
@@ -50,10 +68,19 @@ window.addEventListener('message', (e) => {
     needsLoad = true; lastKey = ''; opened = true;
     applySettings(); pushSettings();
     if (window.RZLock) RZLock.start(d.lock || { mode: 'none' });
+  } else if (d.action === 'cfg') {
+    applyCfg(d.browser, d.store);
+    if (window.RZAdmin) RZAdmin.refresh();
   } else if (d.action === 'walking') {
     $('tablet').style.opacity = d.state ? String(d.opacity) : '1';
   } else if (d.action === 'notify') {
     if (window.RZNotif) RZNotif.push(d.notif, { peek: d.peek, time: d.peekTime });
+  } else if (d.action === 'sound') {
+    try {
+      const a = new Audio('sound/notification.ogg');
+      a.volume = Math.min(1, Math.max(0, Number(d.volume) || 0.6));
+      a.play().catch(() => {});
+    } catch (err) { /* pas de son */ }
   } else if (d.action === 'svcIncoming') {
     if (window.RZSvc) RZSvc.incoming();
   } else if (d.action === 'close') {

@@ -117,6 +117,8 @@ function frameFor(t) {
     const f = document.createElement('iframe');
     f.setAttribute('referrerpolicy', 'no-referrer');
     if (t.app) f.addEventListener('load', () => hideSplash(t.app));
+    // Page chargee : plus de pastille "Page vide ?" par dessus le site
+    f.addEventListener('load', () => { if (t === T()) { clearTimeout(hintTimer); $('blocked').classList.add('hidden'); } });
     framesEl.appendChild(f);
     t.frame = f;
     applyFrameZoom();

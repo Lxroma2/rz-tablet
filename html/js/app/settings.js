@@ -123,16 +123,21 @@ function refreshValues() {
   $('v-display').textContent = settings.wallpaper === 'custom' && !okWallUrl(settings.wallUrl) ? WP_NAMES[DEFAULTS.wallpaper] : (WP_NAMES[settings.wallpaper] || '');
   $('v-browser').textContent = Math.round(zoom * 100) + ' %';
 }
+// une sous-page peut en ouvrir une autre (Administration -> fiche d'une app) : la precedente glisse dessous
 function stGo(id) {
-  if (stPath.length) return;
+  if (stPath.includes(id)) return;
+  const prev = stPath[stPath.length - 1];
   stPath.push(id);
   refreshValues();
+  if (prev) $(prev).classList.add('under');
   $(id).classList.add('open'); stStack.classList.add('pushed');
 }
 function stBack() {
   const id = stPath.pop();
   if (!id) return false;
-  $(id).classList.remove('open'); stStack.classList.remove('pushed');
+  $(id).classList.remove('open');
+  const prev = stPath[stPath.length - 1];
+  if (prev) $(prev).classList.remove('under'); else stStack.classList.remove('pushed');
   refreshValues();
   return true;
 }
@@ -140,11 +145,14 @@ function stReset() {
   stPath = [];
   stStack.classList.add('instant');
   stStack.classList.remove('pushed');
-  stStack.querySelectorAll('.st-page.open').forEach(p => p.classList.remove('open'));
+  stStack.querySelectorAll('.st-page.open').forEach(p => p.classList.remove('open', 'under'));
   void stStack.offsetWidth;
   stStack.classList.remove('instant');
 }
-document.querySelectorAll('[data-go]').forEach((b) => { b.onclick = () => stGo(b.dataset.go); });
+// liste principale : une seule sous-page a la fois (deux clics rapides n'empilent pas deux pages)
+document.querySelectorAll('[data-go]').forEach((b) => {
+  b.onclick = () => { if (!stPath.length || !b.closest('.st-root')) stGo(b.dataset.go); };
+});
 document.querySelectorAll('[data-back]').forEach((b) => { b.onclick = () => stBack(); });
 
 let opTimer = null;

@@ -18,7 +18,8 @@ const post = (name, data = {}) => {
 };
 
 const postJson = (name, data = {}) => {
-  if (!isFiveM) return Promise.resolve(null);
+  // banc d'essai (dev/) : il peut jouer le serveur (ex. Reglages > Administration)
+  if (!isFiveM) return Promise.resolve(typeof window.RZDEV_JSON === 'function' ? window.RZDEV_JSON(name, data) : null);
   return fetch(`https://${GetParentResourceName()}/${name}`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
   }).then(r => r.json()).catch(() => null);

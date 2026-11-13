@@ -1,39 +1,53 @@
 /* ===================================================================
    Calculatrice
-   Ecran a droite, pave rond : gris clair (fonctions), gris fonce (chiffres), orange (operations).
+   Ecran a droite, pave en pilules : gris clair (fonctions), gris fonce (chiffres), orange (operations).
+   La taille des touches est calculee par calc.js selon la fenetre (--kf, --kfs, --zp et la grille).
+   En paysage (.wide) les touches scientifiques, plus sombres, occupent les 6 colonnes de gauche.
    =================================================================== */
-#calculator { background: #000; }
-.ca-wrap { flex: 1; min-height: 0; width: 100%; max-width: 420px; margin: 0 auto; padding: 12px 20px 18px; display: flex; flex-direction: column; justify-content: flex-end; }
-.ca-screen { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; padding: 0 12px 12px; overflow: hidden; }
-.ca-expr { max-width: 100%; min-height: 26px; font-size: 21px; color: rgba(235, 235, 245, .5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: rtl; text-align: right; unicode-bidi: plaintext; }
+#calculator { background: #000; --kf: 34px; --kfs: 18px; --zp: 31px; }
+.ca-wrap { flex: 1; min-height: 0; width: 100%; padding: 12px 20px 18px; display: flex; flex-direction: column; justify-content: flex-end; }
+.ca-screen { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; padding: 0 12px 12px; overflow: hidden; }
+.ca-expr { max-width: 100%; min-height: 1.25em; font-size: 21px; color: rgba(235, 235, 245, .5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: rtl; text-align: right; unicode-bidi: plaintext; }
 .ca-disp {
   max-width: 100%; font-family: "SF Pro Display", -apple-system, "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
   font-size: 80px; font-weight: 300; line-height: 1.05; letter-spacing: -.02em; white-space: nowrap; font-variant-numeric: tabular-nums;
   cursor: default; touch-action: none;
 }
 
+/* bascule standard / scientifique et indicateur radians */
+.ca-mode {
+  position: absolute; top: 4px; left: 4px; height: 30px; padding: 0 14px; border: none; border-radius: 999px;
+  background: rgba(120, 120, 128, .24); color: rgba(235, 235, 245, .8); font-size: 13px; font-weight: 500; cursor: pointer;
+  transition: background-color 150ms ease, transform 150ms var(--ease-out);
+}
+.ca-mode:active { transform: scale(.96); background: rgba(120, 120, 128, .4); }
+.ca-rad { position: absolute; left: 14px; bottom: 16px; font-size: 15px; color: rgba(235, 235, 245, .6); }
+
 .ca-pad { flex: none; display: grid; grid-template-columns: repeat(4, 80px); grid-auto-rows: 80px; gap: 13px 14px; justify-content: center; }
 .ca-key {
-  border: none; border-radius: 40px; background: #333336; color: #fff; cursor: pointer;
-  font-size: 34px; font-weight: 400; line-height: 1; display: grid; place-items: center;
+  border: none; border-radius: 999px; background: #333336; color: #fff; cursor: pointer; padding: 0;
+  font-size: var(--kf); font-weight: 400; line-height: 1; display: grid; place-items: center; min-width: 0;
   transition: background-color 380ms ease, color 380ms ease;
 }
 .ca-key:active, .ca-key.lit { background: #737378; transition-duration: 0ms; }
-.ca-fn { background: #a5a5aa; color: #000; font-size: 29px; font-weight: 500; }
+.ca-fn { background: #a5a5aa; color: #000; font-size: calc(var(--kf) * .86); font-weight: 500; }
 .ca-fn:active, .ca-fn.lit { background: #d9d9de; }
-.ca-op { background: #ff9f0a; font-size: 38px; }
+.ca-op { background: #ff9f0a; font-size: calc(var(--kf) * 1.12); }
 .ca-op:active, .ca-op.lit { background: #ffc978; }
 .ca-op.on { background: #fff; color: #ff9f0a; transition-duration: 160ms; }
-.ca-zero { grid-column: span 2; justify-items: start; padding-left: 31px; }
+.ca-zero { justify-items: start; padding-left: var(--zp); }
 
-/* fenetre reduite */
-#calculator.short .ca-pad { grid-template-columns: repeat(4, 60px); grid-auto-rows: 60px; gap: 9px 12px; }
-#calculator.short .ca-key { font-size: 27px; border-radius: 30px; }
-#calculator.short .ca-op { font-size: 30px; }
-#calculator.short .ca-fn { font-size: 23px; }
-#calculator.short .ca-zero { padding-left: 23px; }
-#calculator.short .ca-disp { font-size: 60px; }
+/* touches scientifiques (paysage) */
+.ca-sci { display: none; background: #1c1c1e; font-size: var(--kfs); font-weight: 500; white-space: nowrap; }
+#calculator.wide .ca-sci { display: grid; }
+.ca-sci:active, .ca-sci.lit { background: #48484c; }
+.ca-sci.on { background: #636366; transition-duration: 160ms; }
+.ca-sci[data-op].on { background: #fff; color: #000; }
+.ca-sci.mem { box-shadow: inset 0 0 0 1.5px rgba(255, 159, 10, .7); }
+.ca-key sup, .ca-key sub { font-size: .62em; line-height: 0; }
+.ca-key sup { vertical-align: .7em; }
+.ca-key sub { vertical-align: -.25em; }
 
 @media (prefers-reduced-motion: reduce) {
-  .ca-key { transition: none; }
+  .ca-key, .ca-mode { transition: none; }
 }

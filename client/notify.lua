@@ -16,6 +16,11 @@ local function str(v, max)
     return tostring(v):sub(1, max)
 end
 
+-- Son de notification : html/sound/notification.ogg, lu par la page NUI (marche tablette rangee aussi)
+function RzPlaySound()
+    SendNUIMessage({ action = 'sound', volume = Config.Notify.volume or 0.6 })
+end
+
 function RzNotify(n)
     if type(n) ~= 'table' then return end
     local data = {
@@ -38,8 +43,16 @@ function RzNotify(n)
     end
 
     if Config.Notify.sound and RzSettings.sound ~= false and not RzSettings.dnd then -- Ne pas deranger : en silence
-        PlaySoundFrontend(-1, 'PICK_UP', 'HUD_FRONTEND_DEFAULT_SOUNDSET', false)
+        RzPlaySound()
     end
+end
+
+-- Commande de test (active seulement avec Config.DebugCommand) : notification + son, meme sans tablette
+if Config.DebugCommand then
+    RegisterCommand(Config.DebugCommand .. 'notif', function()
+        SendNUIMessage({ action = 'notify', notif = { app = 'system', title = 'Test', body = 'Notification de test' }, peek = not RzIsOpen(), peekTime = Config.Notify.peekTime })
+        RzPlaySound()
+    end, false)
 end
 
 exports('Notify', RzNotify)

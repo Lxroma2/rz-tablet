@@ -12,7 +12,7 @@ shared_scripts {
 }
 
 client_scripts { 'client/dui.lua', 'client/main.lua', 'client/services.lua', 'client/lock.lua', 'client/notify.lua', 'client/notes.lua', 'client/map.lua', 'client/vehicles.lua', 'client/bank.lua', 'client/airdrop.lua', 'client/widgets.lua' }
-server_scripts { '@oxmysql/lib/MySQL.lua', 'server/main.lua', 'server/services.lua', 'server/lock.lua', 'server/notes.lua', 'server/vehicles.lua', 'server/bank.lua', 'server/airdrop.lua' }
+server_scripts { '@oxmysql/lib/MySQL.lua', 'server/main.lua', 'server/admin.lua', 'server/services.lua', 'server/lock.lua', 'server/notes.lua', 'server/vehicles.lua', 'server/bank.lua', 'server/airdrop.lua' }
 
 ui_page 'html/index.html'
 
@@ -60,10 +60,12 @@ files {
     'html/js/widgets.js',
     'html/js/switcher.js',
     'html/js/search.js',
+    'html/js/admin.js',
     'html/assets/leaflet/leaflet.js',
     'html/assets/leaflet/leaflet.css',
     'html/assets/map/**/*.webp',
     'html/assets/icons/duotone.json',
+    'html/sound/notification.ogg',
     'html/assets/icons/*.png',
     'html/assets/icons/*.jpg',
     'html/assets/icons/*.jpeg',
